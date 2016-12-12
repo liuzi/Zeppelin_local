@@ -1,0 +1,55 @@
+{
+  "paragraphs": [
+    {
+      "text": "class DataImport( interval: Int,split :String) extends Serializable{\n    /**\n     * Import packages\n     **/ \n    import java.util.Locale\n    import java.text.ParseException\n    import java.text.SimpleDateFormat\n    import com.github.nscala_time.time.Imports._\n    import scala.util.{Success, Try}\n    import scala.collection._\n    import org.apache.spark.sql.catalyst.encoders.RowEncoder\n    import org.apache.spark.sql.types._\n    import org.apache.spark.sql.Row\n    import org.apache.spark.sql.{DataFrame, Row, SQLContext, DataFrameReader}\n    import java.sql.{Connection, DriverManager, ResultSet, Timestamp}\n    import spark.implicits._\n    import com.tdunning.math.stats.TDigest\n    \n    def this() \u003d { this(10,\"localhost\") } \n    def this(interval: Int) \u003d { this(interval,\"localhost\") } \n    def this(split:String) \u003d { this(10, split) } \n \n    /**\n     * data-type solving methods\n    **/\n    def DoubleSuccess(r :Try[Double] ) \u003d{ \n        r match {       \n            case Success(_) \u003d\u003e true\n            case _ \u003d\u003e  false\n        }\n    } \n    def toDouble (s : String) \u003d {\n        val result \u003dDoubleSuccess(scala.util.Try(s.toDouble))\n        if(result) s.toDouble else -1d\n    }\n    def toInt (s : String) \u003d  {\n        val result \u003dDoubleSuccess(scala.util.Try(s.toDouble))\n        if(result) s.toInt else -1.toInt\n    }\n    def toLong(s : String) \u003d  {\n        val result \u003dDoubleSuccess(scala.util.Try(s.toDouble))\n        if(result) s.toLong else -1.toLong\n    }\n    def toShort(s : String) \u003d  {\n        val result \u003dDoubleSuccess(scala.util.Try(s.toDouble))\n        if(result) s.toShort else -1.toShort\n    } \n    \n    def MapSplit(rdd : org.apache.spark.rdd.RDD[String]) \u003d rdd.map(_.split(\";\").map(_.replace(\"\\\"\",\"\"))).filter(s\u003d\u003e s(0)!\u003d\"id\")\n\n    /* get all the useful difinition table */\n    val pre\u003d\"/Users/lynnjiang/Desktop/intern/LB 7-8/ioeventlog/\"\n    val ioevent \u003d MapSplit(sc.textFile(pre+\"ioevent.csv\")).map(s\u003d\u003e(s(0),s(1),toInt(s(2)),s(3),toShort(s(4)),s(5),toInt(s(6)))).toDF(\"id\",\"iotypeid\",\"eventno\",\"descr\",\"level\",\"creationtime\",\"eventtype\").cache\n    val iotype \u003d MapSplit(sc.textFile(pre+\"iotype.csv\")).map(s\u003d\u003e(s(0),toInt(s(1)),s(2),s(3))).toDF(\"id\",\"iotypeno\",\"descr\",\"creationtime\").cache\n    val machinetype \u003d MapSplit(sc.textFile(pre+\"machinetype.csv\")).map(s\u003d\u003e(s(0),s(1),toInt(s(2)),s(3),s(5))).toDF(\"id\",\"MTname\",\"typeno\",\"desc\",\"creationtime\").cache\n    val machine \u003d  MapSplit(sc.textFile(pre+\"machine.csv\")).map(s\u003d\u003e(s(0),s(1),s(2),s(3),s(4),s(5),s(6),s(7),s(8),s(9))).toDF(\"id\",\"stationid\",\"machinetypeid\",\"groupid\",\"address\",\"pid\",\"Mname\",\"sn\",\"ver\",\"creationtime\").cache\n    val DicCatalog \u003d MapSplit(sc.textFile(pre+\"DicCatalog.csv\")).map(s\u003d\u003e(s(0),s(1),s(2),s(3))).toDF(\"id\",\"name\",\"bindcode\",\"descr\").cache\n    val dicitem \u003d MapSplit(sc.textFile(pre+\"dicItem.csv\")).map(s\u003d\u003e(s(0),s(1),s(2),s(3),toInt(s(4)),toInt(s(5)))).toDF(\"id\",\"dicid\",\"DisplayMember\",\"DataMember\",\"Sorter\",\"IsSysDefine\").cache\n    val realnode \u003d MapSplit(sc.textFile(pre+\"realnode.csv\")).map(s\u003d\u003e(s(0),s(1),s(2),s(3),s(4),s(5),toInt(s(6)),toInt(s(7)),s(8),toInt(s(9)),s(10))).toDF(\"id\",\"machineid\",\"resourceid\",\"iotypeid\",\"Rname\",\"Raddr\",\"channel\",\"inout\",\"defaultiotypeid\",\"precision\",\"creationtime\").cache\n    val machineresource \u003d  MapSplit(sc.textFile(pre+\"machineresource.csv\")).map(s\u003d\u003e(s(0),toInt(s(1)),s(2),toInt(s(3)),s(4),toInt(s(5)),s(6),s(7))).toDF(\"id\",\"channel\",\"machinetypeid\",\"inout\",\"defaultiotypeid\",\"precision\",\"name\",\"creationtime\").cache\n    \n    \n    /**\n     * all data map\n     **/ \n    // private var dataMap \u003d new scala.collection.mutable.HashMap[String,org.apache.spark.sql.DataFrame]\n    /**\n     * process time information map\n    **/\n    //private var proMap \u003d new scala.collection.mutable.HashMap[String,org.apache.spark.sql.DataFrame]\n    //case class processTimePer(time:String, avg:Double,per50:Double,per95:Double, per99:Double)\n    //fix inner class creating errors for the class above\n    //org.apache.spark.sql.catalyst.encoders.OuterScopes.addOuterScope(this)\n    \n\n    \n    /**\n     * get Maps of data\n    **/\n    //def getDataMap \u003d dataMap \n    //def getProMap \u003d proMap\n    \n    \n    //id;fc;addr;iotypeno;eventno;eventvalue;time;triggerid;status;creationtime;eventtype;eventlevel\n    /**\n     * read file and transform data file into sql table\n    **/\n    def createTable(path: String)\u003d{\n        //var accesslog \u003d Seq.empty[(String, String, String, Integer, Long, Long)].toDF(\"ip\",\"sortByTens\",\"type\",\"status\",\"replySize\",\"processTime\")\n        val pattern \u003d\"yyyy-MM-dd HH:mm:ss\"  \n        val format \u003d new SimpleDateFormat(pattern,Locale.US) \n        val ioeventLogText \u003d sc.textFile(pre+path)\n        //val name \u003d path.substring(0,path.indexOf(split)-1).replace(\u0027.\u0027,\u0027_\u0027)\n        \n        val ioeventLog \u003d ioeventLogText.map(_.split(\";\").map(_.replace(\"\\\"\",\"\"))).filter(s\u003d\u003e s(0)!\u003d\"id\").map{s\u003d\u003e\n            //var sortByTens \u003d time.toString(\"HH:mm\")\n            //var secondTen \u003d time.getSecondOfMinute()\n            //secondTen \u003d interval*(secondTen/interval).toInt\n            //sortByTens \u003d if(secondTen \u003d\u003d 0) sortByTens + \":00\" else sortByTens + \":\"+secondTen\n            //val id \u003d s(0)\n            val fc \u003d s(1)\n            val addr \u003d s(2)\n            var preaddr \u003d s(2).substring(0,s(2).lastIndexOf(\u0027-\u0027))\n            val iotypeno \u003d toInt(s(3))\n            val eventno \u003d toInt(s(4))\n            val eventvalue \u003d s(5)\n            val time \u003d new DateTime(format.parse(s(6)))\n            val sortByHour \u003d time.toString(\"yyyy-MM-dd HH\")\n            val triggerid \u003d s(7)\n            val status \u003d toInt(s(8))\n            //val creationtime \u003d new DateTime(format.parse(former(9)))\n            val eventtype \u003d toInt(s(10))\n            val eventlevel \u003d toInt(s(11))\n            (fc,addr,preaddr,iotypeno,eventno,eventvalue,sortByHour,triggerid,status,eventtype,eventlevel)  \n        }\n        ioeventLog.sortBy(_._7)\n        //dataMap +\u003d ((name, accesslog))\n        //accesslog.registerTempTable(name)\n        //accesslog\n    }\n    \n}",
+      "dateUpdated": "Dec 12, 2016 5:06:02 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1481533548143_-1031969624",
+      "id": "20161212-170548_269350785",
+      "dateCreated": "Dec 12, 2016 5:05:48 PM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "Ascon/ioeventlog_simple",
+  "id": "2C5ERFWCK",
+  "angularObjects": {
+    "2BZN39DZF:shared_process": [],
+    "2BY98S9W2:shared_process": [],
+    "2BY63HPYF:shared_process": [],
+    "2BY515SJU:shared_process": [],
+    "2BXGT6S2K:shared_process": [],
+    "2BZ613KSU:shared_process": [],
+    "2BZ8A7E2E:shared_process": [],
+    "2BZSKZKCV:shared_process": [],
+    "2BXPP47F9:shared_process": [],
+    "2BXU3K7UZ:shared_process": [],
+    "2BYUGR38A:shared_process": [],
+    "2BYBYAWVT:shared_process": [],
+    "2C1KUKSFC:shared_process": [],
+    "2BXESRBUA:shared_process": [],
+    "2BYNRTR44:shared_process": [],
+    "2BY67DHM2:shared_process": [],
+    "2BXUY475Z:shared_process": [],
+    "2BZPA2E8W:shared_process": []
+  },
+  "config": {},
+  "info": {}
+}
