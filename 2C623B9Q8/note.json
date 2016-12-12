@@ -1,0 +1,55 @@
+{
+  "paragraphs": [
+    {
+      "text": "import java.io.StringWriter\nimport au.com.bytecode.opencsv.CSVWriter\nimport scala.collection.JavaConversions._\nimport java.io.FileWriter\nimport java.io.BufferedWriter\n \nval out \u003d new BufferedWriter(new FileWriter(\"/Users/lynnjiang/Desktop/nodeLink.csv\"))\nval writer \u003d new CSVWriter(out)\nwriter.writeAll(nodeLink)\nout.close()",
+      "dateUpdated": "Dec 7, 2016 3:56:17 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1481097357929_763326246",
+      "id": "20161207-155557_1435098083",
+      "dateCreated": "Dec 7, 2016 3:55:57 PM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "/Learning/writeFile",
+  "id": "2C623B9Q8",
+  "angularObjects": {
+    "2BY98S9W2:shared_process": [],
+    "2BZN39DZF:shared_process": [],
+    "2BY515SJU:shared_process": [],
+    "2BY63HPYF:shared_process": [],
+    "2BXGT6S2K:shared_process": [],
+    "2BZ613KSU:shared_process": [],
+    "2BZ8A7E2E:shared_process": [],
+    "2BZSKZKCV:shared_process": [],
+    "2BXPP47F9:shared_process": [],
+    "2BXU3K7UZ:shared_process": [],
+    "2BYUGR38A:shared_process": [],
+    "2BYBYAWVT:shared_process": [],
+    "2C1KUKSFC:shared_process": [],
+    "2BXESRBUA:shared_process": [],
+    "2BYNRTR44:shared_process": [],
+    "2BY67DHM2:shared_process": [],
+    "2BXUY475Z:shared_process": [],
+    "2BZPA2E8W:shared_process": []
+  },
+  "config": {},
+  "info": {}
+}

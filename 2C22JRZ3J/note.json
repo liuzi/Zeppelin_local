@@ -1,0 +1,313 @@
+{
+  "paragraphs": [
+    {
+      "title": "Summary statistics",
+      "text": "import org.apache.spark.mllib.linalg.Vectors\nimport org.apache.spark.mllib.stat.{MultivariateStatisticalSummary, Statistics}\n\nval observations \u003d sc.parallelize(\n  Seq(\n    Vectors.dense(1.0, 10.0, 100.0),\n    Vectors.dense(2.0, 20.0, 200.0),\n    Vectors.dense(3.0, 30.0, 300.0)\n  )\n)\n\n// Compute column summary statistics.\nval summary: MultivariateStatisticalSummary \u003d Statistics.colStats(observations)\nprintln(summary.mean)  // a dense vector containing the mean value for each column\nprintln(summary.variance)  // column-wise variance\nprintln(summary.numNonzeros)  // number of nonzeros in each column",
+      "dateUpdated": "Dec 1, 2016 1:39:14 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1480570111382_-1514434045",
+      "id": "20161201-132831_172712692",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\nimport org.apache.spark.mllib.linalg.Vectors\n\nimport org.apache.spark.mllib.stat.{MultivariateStatisticalSummary, Statistics}\n\nobservations: org.apache.spark.rdd.RDD[org.apache.spark.mllib.linalg.Vector] \u003d ParallelCollectionRDD[491] at parallelize at \u003cconsole\u003e:167\n\nsummary: org.apache.spark.mllib.stat.MultivariateStatisticalSummary \u003d org.apache.spark.mllib.stat.MultivariateOnlineSummarizer@6ffeaf2a\n[2.0,20.0,200.0]\n[1.0,100.0,10000.0]\n[3.0,3.0,3.0]\n"
+      },
+      "dateCreated": "Dec 1, 2016 1:28:31 PM",
+      "dateStarted": "Dec 1, 2016 1:39:14 PM",
+      "dateFinished": "Dec 1, 2016 1:39:16 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Correlations",
+      "text": "import org.apache.spark.mllib.linalg._\nimport org.apache.spark.mllib.stat.Statistics\nimport org.apache.spark.rdd.RDD\n\nval seriesX: RDD[Double] \u003d sc.parallelize(Array(1, 2, 3, 3, 5))  // a series\n// must have the same number of partitions and cardinality as seriesX\nval seriesY: RDD[Double] \u003d sc.parallelize(Array(11, 22, 33, 33, 555))\n\n// compute the correlation using Pearson\u0027s method. Enter \"spearman\" for Spearman\u0027s method. If a\n// method is not specified, Pearson\u0027s method will be used by default.\nval correlation: Double \u003d Statistics.corr(seriesX, seriesY, \"pearson\")\nprintln(s\"Correlation is: $correlation\")\n\nval data: RDD[Vector] \u003d sc.parallelize(\n  Seq(\n    Vectors.dense(1.0, 10.0, 100.0),\n    Vectors.dense(2.0, 20.0, 200.0),\n    Vectors.dense(5.0, 33.0, 366.0))\n)  // note that each Vector is a row and not a column\n\n// calculate the correlation matrix using Pearson\u0027s method. Use \"spearman\" for Spearman\u0027s method\n// If a method is not specified, Pearson\u0027s method will be used by default.\nval correlMatrix: Matrix \u003d Statistics.corr(data, \"pearson\")\nprintln(correlMatrix.toString)",
+      "dateUpdated": "Dec 1, 2016 1:39:14 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1480558394952_683275293",
+      "id": "20161201-101314_1187909600",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\nimport org.apache.spark.mllib.linalg._\n\nimport org.apache.spark.mllib.stat.Statistics\n\nimport org.apache.spark.rdd.RDD\n\nseriesX: org.apache.spark.rdd.RDD[Double] \u003d ParallelCollectionRDD[493] at parallelize at \u003cconsole\u003e:172\n\nseriesY: org.apache.spark.rdd.RDD[Double] \u003d ParallelCollectionRDD[494] at parallelize at \u003cconsole\u003e:172\n\ncorrelation: Double \u003d 0.8500286768773001\nCorrelation is: 0.8500286768773001\n\ndata: org.apache.spark.rdd.RDD[org.apache.spark.mllib.linalg.Vector] \u003d ParallelCollectionRDD[499] at parallelize at \u003cconsole\u003e:172\n\n\n\n\ncorrelMatrix: org.apache.spark.mllib.linalg.Matrix \u003d\n1.0                 0.978883465889473   0.9903895695275671\n0.978883465889473   1.0                 0.9977483233986101\n0.9903895695275671  0.9977483233986101  1.0\n1.0                 0.978883465889473   0.9903895695275671  \n0.978883465889473   1.0                 0.9977483233986101  \n0.9903895695275671  0.9977483233986101  1.0                 \n"
+      },
+      "dateCreated": "Dec 1, 2016 10:13:14 AM",
+      "dateStarted": "Dec 1, 2016 1:39:14 PM",
+      "dateFinished": "Dec 1, 2016 1:39:20 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Stratified sampling",
+      "text": "// an RDD[(K, V)] of any key value pairs\nval data \u003d sc.parallelize(\n  Seq((1, \u0027a\u0027), (1, \u0027b\u0027), (2, \u0027c\u0027), (2, \u0027d\u0027), (2, \u0027e\u0027), (3, \u0027f\u0027)))\n\n// specify the exact fraction desired from each key\nval fractions \u003d Map(1 -\u003e 0.1, 2 -\u003e 0.6, 3 -\u003e 0.3)\n\n// Get an approximate sample from each stratum\nval approxSample \u003d data.sampleByKey(withReplacement \u003d false, fractions \u003d fractions)\n// Get an exact sample from each stratum\nval exactSample \u003d data.sampleByKeyExact(withReplacement \u003d false, fractions \u003d fractions)",
+      "dateUpdated": "Dec 1, 2016 1:39:14 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1480570398772_860634595",
+      "id": "20161201-133318_1794260368",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\ndata: org.apache.spark.rdd.RDD[(Int, Char)] \u003d ParallelCollectionRDD[502] at parallelize at \u003cconsole\u003e:173\n\nfractions: scala.collection.Map[Int,Double] \u003d Map(1 -\u003e 0.1, 2 -\u003e 0.6, 3 -\u003e 0.3)\n\napproxSample: org.apache.spark.rdd.RDD[(Int, Char)] \u003d MapPartitionsRDD[503] at sampleByKey at \u003cconsole\u003e:176\n\nexactSample: org.apache.spark.rdd.RDD[(Int, Char)] \u003d MapPartitionsRDD[505] at sampleByKeyExact at \u003cconsole\u003e:176\n"
+      },
+      "dateCreated": "Dec 1, 2016 1:33:18 PM",
+      "dateStarted": "Dec 1, 2016 1:39:16 PM",
+      "dateFinished": "Dec 1, 2016 1:39:22 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Hypothesis testing",
+      "text": "import org.apache.spark.mllib.linalg._\nimport org.apache.spark.mllib.regression.LabeledPoint\nimport org.apache.spark.mllib.stat.Statistics\nimport org.apache.spark.mllib.stat.test.ChiSqTestResult\nimport org.apache.spark.rdd.RDD\n\n// a vector composed of the frequencies of events\nval vec: Vector \u003d Vectors.dense(0.1, 0.15, 0.2, 0.3, 0.25)\n\n// compute the goodness of fit. If a second vector to test against is not supplied\n// as a parameter, the test runs against a uniform distribution.\nval goodnessOfFitTestResult \u003d Statistics.chiSqTest(vec)\n// summary of the test including the p-value, degrees of freedom, test statistic, the method\n// used, and the null hypothesis.\nprintln(s\"$goodnessOfFitTestResult\\n\")\n\n// a contingency matrix. Create a dense matrix ((1.0, 2.0), (3.0, 4.0), (5.0, 6.0))\nval mat: Matrix \u003d Matrices.dense(3, 2, Array(1.0, 3.0, 5.0, 2.0, 4.0, 6.0))\n\n// conduct Pearson\u0027s independence test on the input contingency matrix\nval independenceTestResult \u003d Statistics.chiSqTest(mat)\n// summary of the test including the p-value, degrees of freedom\nprintln(s\"$independenceTestResult\\n\")\n\nval obs: RDD[LabeledPoint] \u003d\n  sc.parallelize(\n    Seq(\n      LabeledPoint(1.0, Vectors.dense(1.0, 0.0, 3.0)),\n      LabeledPoint(1.0, Vectors.dense(1.0, 2.0, 0.0)),\n      LabeledPoint(-1.0, Vectors.dense(-1.0, 0.0, -0.5)\n      )\n    )\n  ) // (feature, label) pairs.\n\n// The contingency table is constructed from the raw (feature, label) pairs and used to conduct\n// the independence test. Returns an array containing the ChiSquaredTestResult for every feature\n// against the label.\nval featureTestResults: Array[ChiSqTestResult] \u003d Statistics.chiSqTest(obs)\nfeatureTestResults.zipWithIndex.foreach { case (k, v) \u003d\u003e\n  println(\"Column \" + (v + 1).toString + \":\")\n  println(k)\n}  // summary of the test",
+      "dateUpdated": "Dec 1, 2016 1:39:14 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1480558479924_-1899220621",
+      "id": "20161201-101439_855207305",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\nimport org.apache.spark.mllib.linalg._\n\nimport org.apache.spark.mllib.regression.LabeledPoint\n\nimport org.apache.spark.mllib.stat.Statistics\n\nimport org.apache.spark.mllib.stat.test.ChiSqTestResult\n\nimport org.apache.spark.rdd.RDD\n\nvec: org.apache.spark.mllib.linalg.Vector \u003d [0.1,0.15,0.2,0.3,0.25]\n\n\n\n\n\n\n\ngoodnessOfFitTestResult: org.apache.spark.mllib.stat.test.ChiSqTestResult \u003d\nChi squared test summary:\nmethod: pearson\ndegrees of freedom \u003d 4\nstatistic \u003d 0.12499999999999999\npValue \u003d 0.998126379239318\nNo presumption against null hypothesis: observed follows the same distribution as expected..\nChi squared test summary:\nmethod: pearson\ndegrees of freedom \u003d 4 \nstatistic \u003d 0.12499999999999999 \npValue \u003d 0.998126379239318 \nNo presumption against null hypothesis: observed follows the same distribution as expected..\n\n\n\n\n\nmat: org.apache.spark.mllib.linalg.Matrix \u003d\n1.0  2.0\n3.0  4.0\n5.0  6.0\n\n\n\n\n\n\n\nindependenceTestResult: org.apache.spark.mllib.stat.test.ChiSqTestResult \u003d\nChi squared test summary:\nmethod: pearson\ndegrees of freedom \u003d 2\nstatistic \u003d 0.14141414141414144\npValue \u003d 0.931734784568187\nNo presumption against null hypothesis: the occurrence of the outcomes is statistically independent..\nChi squared test summary:\nmethod: pearson\ndegrees of freedom \u003d 2 \nstatistic \u003d 0.14141414141414144 \npValue \u003d 0.931734784568187 \nNo presumption against null hypothesis: the occurrence of the outcomes is statistically independent..\n\n\nobs: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d ParallelCollectionRDD[506] at parallelize at \u003cconsole\u003e:180\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nfeatureTestResults: Array[org.apache.spark.mllib.stat.test.ChiSqTestResult] \u003d\nArray(Chi squared test summary:\nmethod: pearson\ndegrees of freedom \u003d 1\nstatistic \u003d 3.0000000000000004\npValue \u003d 0.08326451666354884\nLow presumption against null hypothesis: the occurrence of the outcomes is statistically independent.., Chi squared test summary:\nmethod: pearson\ndegrees of freedom \u003d 1\nstatistic \u003d 0.75\npValue \u003d 0.3864762307712326\nNo presumption against null hypothesis: the occurrence of the outcomes is statistically independent.., Chi squared test summary:\nmethod: pearson\ndegrees of freedom \u003d 2\nstatistic \u003d 3.0\npValue \u003d 0.22313016014843035\nNo presumption against null hypothesis: the occurrence of the outcomes is statistically independent..)\nColumn 1:\nChi squared test summary:\nmethod: pearson\ndegrees of freedom \u003d 1 \nstatistic \u003d 3.0000000000000004 \npValue \u003d 0.08326451666354884 \nLow presumption against null hypothesis: the occurrence of the outcomes is statistically independent..\nColumn 2:\nChi squared test summary:\nmethod: pearson\ndegrees of freedom \u003d 1 \nstatistic \u003d 0.75 \npValue \u003d 0.3864762307712326 \nNo presumption against null hypothesis: the occurrence of the outcomes is statistically independent..\nColumn 3:\nChi squared test summary:\nmethod: pearson\ndegrees of freedom \u003d 2 \nstatistic \u003d 3.0 \npValue \u003d 0.22313016014843035 \nNo presumption against null hypothesis: the occurrence of the outcomes is statistically independent..\n"
+      },
+      "dateCreated": "Dec 1, 2016 10:14:39 AM",
+      "dateStarted": "Dec 1, 2016 1:39:21 PM",
+      "dateFinished": "Dec 1, 2016 1:39:27 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Streaming Significance Testing",
+      "text": "val data \u003d sc.textFileStream(dataDir).map(line \u003d\u003e line.split(\",\") match {\n  case Array(label, value) \u003d\u003e BinarySample(label.toBoolean, value.toDouble)\n})\n\nval streamingTest \u003d new StreamingTest()\n  .setPeacePeriod(0)\n  .setWindowSize(0)\n  .setTestMethod(\"welch\")\n\nval out \u003d streamingTest.registerStream(data)\nout.print()",
+      "dateUpdated": "Dec 1, 2016 1:45:47 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "title": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1480570554027_-1730664048",
+      "id": "20161201-133554_1713925305",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "\n\n\n\u003cconsole\u003e:187: error: value textFileStream is not a member of org.apache.spark.SparkContext\n       val data \u003d sc.textFileStream(dataDir).map(line \u003d\u003e line.split(\",\") match {\n                     ^\n\n\n\n\u003cconsole\u003e:187: error: not found: value dataDir\n       val data \u003d sc.textFileStream(dataDir).map(line \u003d\u003e line.split(\",\") match {\n                                    ^\n\n\n\n\u003cconsole\u003e:188: error: not found: value BinarySample\n         case Array(label, value) \u003d\u003e BinarySample(label.toBoolean, value.toDouble)\n                                     ^\n"
+      },
+      "dateCreated": "Dec 1, 2016 1:35:54 PM",
+      "dateStarted": "Dec 1, 2016 1:45:47 PM",
+      "dateFinished": "Dec 1, 2016 1:45:47 PM",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Random data generation",
+      "text": "import org.apache.spark.SparkContext\nimport org.apache.spark.mllib.random.RandomRDDs._\n\n// Generate a random double RDD that contains 1 million i.i.d. values drawn from the\n// standard normal distribution `N(0, 1)`, evenly distributed in 10 partitions.\nval u \u003d normalRDD(sc, 1000000L, 10)\n// Apply a transform to get a random double RDD following `N(1, 4)`.\nval v \u003d u.map(x \u003d\u003e 1.0 + 2.0 * x)",
+      "dateUpdated": "Dec 1, 2016 1:48:33 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1480570674710_1503335992",
+      "id": "20161201-133754_2091610717",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\nimport org.apache.spark.SparkContext\n\nimport org.apache.spark.mllib.random.RandomRDDs._\n\nu: org.apache.spark.rdd.RDD[Double] \u003d RandomRDD[525] at RDD at RandomRDD.scala:42\n\nv: org.apache.spark.rdd.RDD[Double] \u003d MapPartitionsRDD[526] at map at \u003cconsole\u003e:193\n"
+      },
+      "dateCreated": "Dec 1, 2016 1:37:54 PM",
+      "dateStarted": "Dec 1, 2016 1:48:15 PM",
+      "dateFinished": "Dec 1, 2016 1:48:16 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Kernel density estimation",
+      "text": "import org.apache.spark.mllib.stat.KernelDensity\nimport org.apache.spark.rdd.RDD\n\n// an RDD of sample data\nval data: RDD[Double] \u003d sc.parallelize(Seq(1, 1, 1, 2, 3, 4, 5, 5, 6, 7, 8, 9, 9))\n\n// Construct the density estimator with the sample data and a standard deviation\n// for the Gaussian kernels\nval kd \u003d new KernelDensity()\n  .setSample(data)\n  .setBandwidth(3.0)\n\n// Find density estimates for the given values\nval densities \u003d kd.estimate(Array(-1.0, 2.0, 5.0))",
+      "dateUpdated": "Dec 1, 2016 1:39:14 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1480570712219_1808654764",
+      "id": "20161201-133832_215871541",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\nimport org.apache.spark.mllib.stat.KernelDensity\n\nimport org.apache.spark.rdd.RDD\n\ndata: org.apache.spark.rdd.RDD[Double] \u003d ParallelCollectionRDD[524] at parallelize at \u003cconsole\u003e:187\n\nkd: org.apache.spark.mllib.stat.KernelDensity \u003d org.apache.spark.mllib.stat.KernelDensity@338250e\n\ndensities: Array[Double] \u003d Array(0.04145944023341912, 0.07902016933085629, 0.08962920127312338)\n"
+      },
+      "dateCreated": "Dec 1, 2016 1:38:32 PM",
+      "dateStarted": "Dec 1, 2016 1:39:30 PM",
+      "dateFinished": "Dec 1, 2016 1:39:32 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "",
+      "dateUpdated": "Dec 1, 2016 1:39:14 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1480570736216_-510196209",
+      "id": "20161201-133856_1419149879",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": ""
+      },
+      "dateCreated": "Dec 1, 2016 1:38:56 PM",
+      "dateStarted": "Dec 1, 2016 1:39:31 PM",
+      "dateFinished": "Dec 1, 2016 1:39:32 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "/Learning/MLib",
+  "id": "2C22JRZ3J",
+  "angularObjects": {
+    "2BY98S9W2:shared_process": [],
+    "2BZN39DZF:shared_process": [],
+    "2BY515SJU:shared_process": [],
+    "2BY63HPYF:shared_process": [],
+    "2BXGT6S2K:shared_process": [],
+    "2BZ613KSU:shared_process": [],
+    "2BZ8A7E2E:shared_process": [],
+    "2BZSKZKCV:shared_process": [],
+    "2BXPP47F9:shared_process": [],
+    "2BXU3K7UZ:shared_process": [],
+    "2BYUGR38A:shared_process": [],
+    "2BYBYAWVT:shared_process": [],
+    "2C1KUKSFC:shared_process": [],
+    "2BXESRBUA:shared_process": [],
+    "2BYNRTR44:shared_process": [],
+    "2BY67DHM2:shared_process": [],
+    "2BXUY475Z:shared_process": [],
+    "2BZPA2E8W:shared_process": []
+  },
+  "config": {},
+  "info": {}
+}

@@ -1,0 +1,2444 @@
+{
+  "paragraphs": [
+    {
+      "text": "val ioeventlogText0706 \u003d sc.textFile(\"/Users/lynnjiang/Desktop/intern/LB 7-8/ioeventlog/ioeventlog_0706.csv\")\nval ioeventlogText0707 \u003d sc.textFile(\"/Users/lynnjiang/Desktop/intern/LB 7-8/ioeventlog/ioeventlog_0707.csv\")\nval ioeventlogText0708 \u003d sc.textFile(\"/Users/lynnjiang/Desktop/intern/LB 7-8/ioeventlog/ioeventlog_0708.csv\")\nval ioeventlogText0709 \u003d sc.textFile(\"/Users/lynnjiang/Desktop/intern/LB 7-8/ioeventlog/ioeventlog_0709.csv\")\nval ioeventlogText0710 \u003d sc.textFile(\"/Users/lynnjiang/Desktop/intern/LB 7-8/ioeventlog/ioeventlog_0710.csv\")\n\nvar ioeventlogText \u003d ioeventlogText0706.union(ioeventlogText0707)\nioeventlogText \u003d ioeventlogText.union(ioeventlogText0708)\nioeventlogText \u003d ioeventlogText.union(ioeventlogText0709)\nval ioeventlogTextAll \u003d ioeventlogText.union(ioeventlogText0710)",
+      "dateUpdated": "Nov 22, 2016 1:20:17 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "editorHide": false,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478238057627_-296277134",
+      "id": "20161104-134057_1091069087",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\nioeventlogText0706: org.apache.spark.rdd.RDD[String] \u003d /Users/lynnjiang/Desktop/intern/LB 7-8/ioeventlog/ioeventlog_0706.csv MapPartitionsRDD[1] at textFile at \u003cconsole\u003e:27\n\nioeventlogText0707: org.apache.spark.rdd.RDD[String] \u003d /Users/lynnjiang/Desktop/intern/LB 7-8/ioeventlog/ioeventlog_0707.csv MapPartitionsRDD[3] at textFile at \u003cconsole\u003e:27\n\nioeventlogText0708: org.apache.spark.rdd.RDD[String] \u003d /Users/lynnjiang/Desktop/intern/LB 7-8/ioeventlog/ioeventlog_0708.csv MapPartitionsRDD[5] at textFile at \u003cconsole\u003e:27\n\nioeventlogText0709: org.apache.spark.rdd.RDD[String] \u003d /Users/lynnjiang/Desktop/intern/LB 7-8/ioeventlog/ioeventlog_0709.csv MapPartitionsRDD[7] at textFile at \u003cconsole\u003e:27\n\nioeventlogText0710: org.apache.spark.rdd.RDD[String] \u003d /Users/lynnjiang/Desktop/intern/LB 7-8/ioeventlog/ioeventlog_0710.csv MapPartitionsRDD[9] at textFile at \u003cconsole\u003e:27\n\nioeventlogText: org.apache.spark.rdd.RDD[String] \u003d UnionRDD[10] at union at \u003cconsole\u003e:31\n\nioeventlogText: org.apache.spark.rdd.RDD[String] \u003d UnionRDD[11] at union at \u003cconsole\u003e:35\n\nioeventlogText: org.apache.spark.rdd.RDD[String] \u003d UnionRDD[12] at union at \u003cconsole\u003e:35\n\nioeventlogTextAll: org.apache.spark.rdd.RDD[String] \u003d UnionRDD[13] at union at \u003cconsole\u003e:35\n"
+      },
+      "dateCreated": "Nov 4, 2016 1:40:57 AM",
+      "dateStarted": "Nov 18, 2016 3:18:47 AM",
+      "dateFinished": "Nov 18, 2016 3:19:05 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "case class Ioeventlog(id : String, addr : String, macaddr : String, iotypeno : Long, eventno : Integer, Date : String, Hour : Integer )\n\nval ioeventlog \u003d ioeventlogTextAll.map(s\u003d\u003es.split(\";\")).filter(s\u003d\u003es(0)!\u003d\"id\").map(\n    s \u003d\u003e Ioeventlog(s(0).replaceAll(\"\\\"\",\"\"),//id\n                    //s(1).replaceAll(\"\\\"\",\"\"),//fc\n                    s(2).replaceAll(\"\\\"\",\"\"),//addr\n                    s(2).replaceAll(\"\\\"\",\"\").substring(0,s(2).lastIndexOf(\"-\")-1),//macaddr\n                   //s(1).replaceAll(\"\\\"\",\"\"),\n                    s(3).toLong,//iotypeno\n                    s(4).toInt,//eventno\n                    s(6).replaceAll(\"\\\"\",\"\").substring(0,13),//Date\n                    s(6).replaceAll(\"\\\"\",\"\").substring(11,13).toInt//Hour\n                   // s(6).replaceAll(\"\\\"\",\"\").substring(11,13).toInt//hour\n    ) \n).toDF()\n\n\nioeventlog.registerTempTable(\"ioeventlog\")\n//%sql select count(1) from ioeventlog where Day \u003d \"2015-01-07\" and eventno \u003d 0 group by hour order by hour\n\n",
+      "dateUpdated": "Nov 21, 2016 10:59:27 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1477034207479_-1405493084",
+      "id": "20161021-151647_993901319",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\ndefined class Ioeventlog\n\nioeventlog: org.apache.spark.sql.DataFrame \u003d [id: string, addr: string ... 5 more fields]\n\nwarning: there was one deprecation warning; re-run with -deprecation for details\n"
+      },
+      "dateCreated": "Oct 21, 2016 3:16:47 AM",
+      "dateStarted": "Nov 17, 2016 10:44:02 AM",
+      "dateFinished": "Nov 17, 2016 10:44:12 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val ioeventlogText \u003d sc.textFile(\"/Users/lynnjiang/Desktop/intern/LB 7-8/ioeventlog_1/ioeventlog.csv\")\n\n//Modified\ncase class Ioeventlog(id : String, addr : String, macaddr : String, iotypeno : Long, eventno : Integer, Date : String, Hour : Integer )\n\ndef toDouble (s : String) \u003d {\n    if(\"(null)\".equals(s)) -1d else s.toDouble\n}\n\ndef toInt (s : String) \u003d  {\n    if(\"(null)\".equals(s)) -1 else s.toInt\n}\n\ndef toLong(s : String) \u003d  {\n    if(\"(null)\".equals(s)) -1 else s.toLong\n}\n\ndef transString(s : String) \u003d  {\n    s.replaceAll(\"\\\"\",\"\")\n}\n\nval ioeventlog \u003d ioeventlogText.map(s\u003d\u003es.split(\";\")).filter(s\u003d\u003es(0)!\u003d\"id\").map{s \u003d\u003e \n    val date \u003d s(6).replaceAll(\"\\\"\",\"\")\n    Ioeventlog(transString(s(0)),//id\n                //s(1).replaceAll(\"\\\"\",\"\"),//fc\n                transString(s(2)),//addr\n                    s(2).replaceAll(\"\\\"\",\"\").substring(0,s(2).lastIndexOf(\"-\")-1),//macaddr\n                   //s(1).replaceAll(\"\\\"\",\"\"),\n                    toLong(s(3)),//iotypeno\n                    toInt(s(4)),//eventno\n                    date.substring(0,13),//Date\n                    date.replaceAll(\"\\\"\",\"\").substring(11,13).toInt//Hour\n                   // s(6).replaceAll(\"\\\"\",\"\").substring(11,13).toInt//hour\n    ) \n}.toDF()\n\nioeventlog.registerTempTable(\"ioeventlog\")",
+      "dateUpdated": "Nov 22, 2016 10:27:59 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1479441894463_-115920550",
+      "id": "20161118-120454_1961595030",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\nioeventlogText: org.apache.spark.rdd.RDD[String] \u003d /Users/lynnjiang/Desktop/intern/LB 7-8/ioeventlog_1/ioeventlog.csv MapPartitionsRDD[1] at textFile at \u003cconsole\u003e:27\n\ndefined class Ioeventlog\n\ntoDouble: (s: String)Double\n\ntoInt: (s: String)Int\n\ntoLong: (s: String)Long\n\ntransString: (s: String)String\n\nioeventlog: org.apache.spark.sql.DataFrame \u003d [id: string, addr: string ... 5 more fields]\n\nwarning: there was one deprecation warning; re-run with -deprecation for details\n"
+      },
+      "dateCreated": "Nov 18, 2016 12:04:54 PM",
+      "dateStarted": "Nov 22, 2016 10:28:00 AM",
+      "dateFinished": "Nov 22, 2016 10:28:41 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "var testFrame \u003d sqlContext.sql(\"select Date, Hour, count(1) as sum from ioeventlog where iotypeno \u003d -1 group by Date, Hour order by Date\")\n",
+      "dateUpdated": "Nov 22, 2016 10:28:53 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1479695156310_-982068766",
+      "id": "20161121-102556_679185749",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\ntestFrame: org.apache.spark.sql.DataFrame \u003d [Date: string, Hour: int ... 1 more field]\n"
+      },
+      "dateCreated": "Nov 21, 2016 10:25:56 AM",
+      "dateStarted": "Nov 22, 2016 10:28:53 AM",
+      "dateFinished": "Nov 22, 2016 10:28:54 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val t1 \u003d sqlContext.createDataFrame(Seq((\"2014-06-04 01\", 1, 0)))\nt1.show()\n",
+      "dateUpdated": "Nov 22, 2016 10:29:02 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1479696853594_-1241933570",
+      "id": "20161121-105413_1742303501",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\nt1: org.apache.spark.sql.DataFrame \u003d [_1: string, _2: int ... 1 more field]\n+-------------+---+---+\n|           _1| _2| _3|\n+-------------+---+---+\n|2014-06-04 01|  1|  0|\n+-------------+---+---+\n\n"
+      },
+      "dateCreated": "Nov 21, 2016 10:54:13 AM",
+      "dateStarted": "Nov 22, 2016 10:29:02 AM",
+      "dateFinished": "Nov 22, 2016 10:29:04 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "//testFrame \u003d testFrame.union(t1).sort(\"Date\")\n//testFrame.show\ntestFrame \u003d testFrame.distinct\ntestFrame.show",
+      "dateUpdated": "Nov 22, 2016 10:34:49 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1479695700800_-980563708",
+      "id": "20161121-103500_658617667",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\ntestFrame: org.apache.spark.sql.DataFrame \u003d [Date: string, Hour: int ... 1 more field]\n+-------------+----+---+\n|         Date|Hour|sum|\n+-------------+----+---+\n|2014-06-03 14|  14|  1|\n|2014-06-04 01|   1|  0|\n|2014-11-15 14|  14| 10|\n|2014-11-19 08|   8|  1|\n|2014-11-19 16|  16|255|\n|2014-11-19 17|  17| 66|\n|2014-11-20 08|   8|216|\n|2014-11-20 09|   9|453|\n|2014-11-20 10|  10|450|\n|2014-11-20 11|  11|453|\n|2014-11-20 12|  12|450|\n|2014-11-20 13|  13|453|\n|2014-11-20 14|  14|450|\n|2014-11-20 15|  15|450|\n|2014-11-20 16|  16|452|\n|2014-11-20 17|  17| 44|\n|2014-11-21 08|   8|  1|\n|2014-11-21 10|  10|258|\n|2014-11-21 11|  11|453|\n|2014-11-21 12|  12|450|\n+-------------+----+---+\nonly showing top 20 rows\n\n"
+      },
+      "dateCreated": "Nov 21, 2016 10:35:00 AM",
+      "dateStarted": "Nov 22, 2016 10:34:49 AM",
+      "dateFinished": "Nov 22, 2016 10:34:54 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "//import spark.implicits._\nimport org.apache.spark.sql.catalyst.encoders.RowEncoder\nimport org.apache.spark.sql.types._\nimport org.apache.spark.sql.Row\n\nval schema \u003d StructType(Seq(\n  StructField(\"Date\", StringType),\n  StructField(\"Hour\", IntegerType),\n  StructField(\"sum\", IntegerType)\n))\n\nval encoder \u003d RowEncoder(schema)\ntestFrame.map{\n    case Row(date : String, hour : Integer, sum : Integer)\u003d\u003e\n    println(date)\n    case row \u003d\u003e row\n} (encoder)",
+      "dateUpdated": "Nov 22, 2016 10:42:09 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1479695401002_-650078083",
+      "id": "20161121-103001_535170577",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "\nimport org.apache.spark.sql.catalyst.encoders.RowEncoder\n\nimport org.apache.spark.sql.types._\n\nimport org.apache.spark.sql.Row\n\nschema: org.apache.spark.sql.types.StructType \u003d StructType(StructField(Date,StringType,true), StructField(Hour,IntegerType,true), StructField(sum,IntegerType,true))\n\nencoder: org.apache.spark.sql.catalyst.encoders.ExpressionEncoder[org.apache.spark.sql.Row] \u003d class[Date[0]: string, Hour[0]: int, sum[0]: int]\n\n\n\n\n\n\n\n\u003cconsole\u003e:64: error: type mismatch;\n found   : org.apache.spark.sql.catalyst.encoders.ExpressionEncoder[org.apache.spark.sql.Row]\n required: org.apache.spark.sql.Encoder[Any]\nNote: org.apache.spark.sql.Row \u003c: Any, but trait Encoder is invariant in type T.\nYou may wish to define T as +T instead. (SLS 4.5)\n       } (encoder)\n          ^\n"
+      },
+      "dateCreated": "Nov 21, 2016 10:30:01 AM",
+      "dateStarted": "Nov 22, 2016 10:41:16 AM",
+      "dateFinished": "Nov 22, 2016 10:41:18 AM",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "import org.apache.spark.sql.functions.{when, lower}\n\nval df \u003d Seq(\n  (2012, \"Tesla\", \"S\"), (1997, \"Ford\", \"E350\"),\n  (2015, \"Chevy\", \"Volt\")\n).toDF(\"year\", \"make\", \"model\")\n\ndf.withColumn(\"make\", when(lower($\"make\") \u003d\u003d\u003d \"tesla\", \"S\").otherwise($\"make\"))\n\nimport org.apache.spark.sql.catalyst.encoders.RowEncoder\nimport org.apache.spark.sql.types._\nimport org.apache.spark.sql.Row\n\n// Yup, it would be possible to reuse df.schema here\nval schema \u003d StructType(Seq(\n  StructField(\"year\", IntegerType),\n  StructField(\"make\", StringType),\n  StructField(\"model\", StringType)\n))\n\nval encoder \u003d RowEncoder(schema)\n\ndf.map {\n  case Row(year, make: String, model) if make.toLowerCase \u003d\u003d \"tesla\" \u003d\u003e \n    Row(year, \"S\", model)\n  case row \u003d\u003e row\n} (encoder)",
+      "dateUpdated": "Nov 21, 2016 5:59:41 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1479722367209_-2027189327",
+      "id": "20161121-175927_746775201",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\nimport org.apache.spark.sql.functions.{when, lower}\n\ndf: org.apache.spark.sql.DataFrame \u003d [year: int, make: string ... 1 more field]\n\nres97: org.apache.spark.sql.DataFrame \u003d [year: int, make: string ... 1 more field]\n\nimport org.apache.spark.sql.catalyst.encoders.RowEncoder\n\nimport org.apache.spark.sql.types._\n\nimport org.apache.spark.sql.Row\n\nschema: org.apache.spark.sql.types.StructType \u003d StructType(StructField(year,IntegerType,true), StructField(make,StringType,true), StructField(model,StringType,true))\n\nencoder: org.apache.spark.sql.catalyst.encoders.ExpressionEncoder[org.apache.spark.sql.Row] \u003d class[year[0]: int, make[0]: string, model[0]: string]\n\nres98: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] \u003d [year: int, make: string ... 1 more field]\n"
+      },
+      "dateCreated": "Nov 21, 2016 5:59:27 AM",
+      "dateStarted": "Nov 21, 2016 5:59:41 AM",
+      "dateFinished": "Nov 21, 2016 5:59:45 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "var testFF\u003d testFrame.filter(\"Date like \u00272014-11-20%\u0027\")",
+      "dateUpdated": "Nov 21, 2016 11:02:57 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1479695565143_-1388933888",
+      "id": "20161121-103245_60189365",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\ntestFF: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] \u003d [Date: string, Hour: int ... 1 more field]\n"
+      },
+      "dateCreated": "Nov 21, 2016 10:32:45 AM",
+      "dateStarted": "Nov 21, 2016 11:02:57 AM",
+      "dateFinished": "Nov 21, 2016 11:02:57 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select * from ioeventlog where iotypeno \u003d -1 limit 10",
+      "dateUpdated": "Nov 18, 2016 3:27:25 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "id",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "addr",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "id",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "addr",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1479453202928_-830431992",
+      "id": "20161118-151322_1755643168",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "id\taddr\tmacaddr\tiotypeno\teventno\tDate\tHour\nA66BE813-6F95-E411-8967-00FF39ACF4D9\t105-1#4-0\t105-1#4\t-1\t1\t2015-01-06 14\t14\n9D1DD926-B794-E411-8FDA-00FF39ACF4D9\t105-1#4-0\t105-1#4\t-1\t1\t2015-01-05 16\t16\n668ED384-C784-E411-909A-00FF39ACF4D9\t105-1#4-0\t105-1#4\t-1\t1\t2014-12-16 10\t10\n07981CC9-C984-E411-909A-00FF39ACF4D9\t105-2#66-182\t105-2#66\t-1\t4\t2014-12-16 10\t10\n10981CC9-C984-E411-909A-00FF39ACF4D9\t105-2#66-168\t105-2#66\t-1\t4\t2014-12-16 10\t10\n13981CC9-C984-E411-909A-00FF39ACF4D9\t105-2#66-169\t105-2#66\t-1\t5\t2014-12-16 10\t10\n16981CC9-C984-E411-909A-00FF39ACF4D9\t105-2#66-184\t105-2#66\t-1\t4\t2014-12-16 10\t10\n883A28CF-C984-E411-909A-00FF39ACF4D9\t105-2#66-170\t105-2#66\t-1\t6\t2014-12-16 10\t10\n943A28CF-C984-E411-909A-00FF39ACF4D9\t105-2#66-174\t105-2#66\t-1\t4\t2014-12-16 10\t10\n973A28CF-C984-E411-909A-00FF39ACF4D9\t105-2#66-175\t105-2#66\t-1\t5\t2014-12-16 10\t10\n"
+      },
+      "dateCreated": "Nov 18, 2016 3:13:22 AM",
+      "dateStarted": "Nov 18, 2016 3:27:25 AM",
+      "dateFinished": "Nov 18, 2016 3:27:26 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "\n\ntransString(\"wer\")",
+      "dateUpdated": "Nov 18, 2016 3:12:33 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1479451726691_1137488066",
+      "id": "20161118-144846_823682272",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\ntransString: (s: String)String\n\nres68: String \u003d wer\n"
+      },
+      "dateCreated": "Nov 18, 2016 2:48:46 AM",
+      "dateStarted": "Nov 18, 2016 3:11:53 AM",
+      "dateFinished": "Nov 18, 2016 3:11:53 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python \nfrom pyspark.sql import HiveContext\n",
+      "dateUpdated": "Nov 17, 2016 11:22:14 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1479352909666_-313445649",
+      "id": "20161117-112149_799642611",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "Traceback (most recent call last):\n  File \"\u003cstdin\u003e\", line 1, in \u003cmodule\u003e\nImportError: No module named pyspark.sql\n"
+      },
+      "dateCreated": "Nov 17, 2016 11:21:49 AM",
+      "dateStarted": "Nov 17, 2016 11:22:14 AM",
+      "dateFinished": "Nov 17, 2016 11:22:14 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n\nimport HiveContext\n",
+      "dateUpdated": "Nov 17, 2016 11:06:41 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1479350711164_-1006135400",
+      "id": "20161117-104511_1536059255",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "Traceback (most recent call last):\n  File \"\u003cstdin\u003e\", line 1, in \u003cmodule\u003e\nImportError: No module named HiveContext\n"
+      },
+      "dateCreated": "Nov 17, 2016 10:45:11 AM",
+      "dateStarted": "Nov 17, 2016 11:06:41 AM",
+      "dateFinished": "Nov 17, 2016 11:06:42 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nfrom tdigest import TDigest\nfrom pyspark.sql import SQLContext\ntestVector \u003d sqlContext.sql(\"\"\"select  date, count(1) As sum from ioeventlog where iotypeno \u003d 11 group by date order by date\"\"\")\n\ndigest \u003d TDigest()\nfor p in testVector.select(\"sum\").collect():\n    digest.update(p.sum)\n\nprint(digest.percentile(87))",
+      "dateUpdated": "Nov 17, 2016 1:49:18 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1479353406165_-307942028",
+      "id": "20161117-113006_1218660031",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "14.0833333333\n"
+      },
+      "dateCreated": "Nov 17, 2016 11:30:06 AM",
+      "dateStarted": "Nov 17, 2016 1:40:22 AM",
+      "dateFinished": "Nov 17, 2016 1:41:25 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\ntestVector.map(lambda line : line[2] * 2)\n\n",
+      "dateUpdated": "Nov 17, 2016 1:52:24 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1479354193926_-706820490",
+      "id": "20161117-114313_76283652",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "Traceback (most recent call last):\n  File \"/var/folders/gg/51ng7v857vz2ghyywc7smgw00000gn/T/zeppelin_pyspark-3060909276392967444.py\", line 267, in \u003cmodule\u003e\n    raise Exception(traceback.format_exc())\nException: Traceback (most recent call last):\n  File \"/var/folders/gg/51ng7v857vz2ghyywc7smgw00000gn/T/zeppelin_pyspark-3060909276392967444.py\", line 265, in \u003cmodule\u003e\n    exec(code)\n  File \"\u003cstdin\u003e\", line 1, in \u003cmodule\u003e\n  File \"/Users/lynnjiang/Downloads/zeppelin-0.6.2-bin-all/interpreter/spark/pyspark/pyspark.zip/pyspark/sql/dataframe.py\", line 844, in __getattr__\n    \"\u0027%s\u0027 object has no attribute \u0027%s\u0027\" % (self.__class__.__name__, name))\nAttributeError: \u0027DataFrame\u0027 object has no attribute \u0027map\u0027\n\n"
+      },
+      "dateCreated": "Nov 17, 2016 11:43:13 AM",
+      "dateStarted": "Nov 17, 2016 1:52:25 AM",
+      "dateFinished": "Nov 17, 2016 1:52:25 AM",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\ntestVector.count()",
+      "dateUpdated": "Nov 17, 2016 1:46:43 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1479361560602_1838832523",
+      "id": "20161117-134600_1250926229",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "31\n"
+      },
+      "dateCreated": "Nov 17, 2016 1:46:00 AM",
+      "dateStarted": "Nov 17, 2016 1:46:43 AM",
+      "dateFinished": "Nov 17, 2016 1:47:46 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select * from testVector where sum \u003e14",
+      "dateUpdated": "Nov 17, 2016 1:45:12 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1479353863807_-854627532",
+      "id": "20161117-113743_294807103",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "date\tsum\n2016-07-06 13\t18\n2016-07-06 15\t28\n2016-07-06 16\t46\n2016-07-07 08\t17\n2016-07-08 11\t37\n2016-07-08 13\t26\n"
+      },
+      "dateCreated": "Nov 17, 2016 11:37:43 AM",
+      "dateStarted": "Nov 17, 2016 1:45:12 AM",
+      "dateFinished": "Nov 17, 2016 1:46:20 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python \nfrom tdigest import TDigest\nfrom numpy.random import random\n\ndigest \u003d TDigest()\ndigest.batch_update(testVector)\n\nprint(digest.percentile(99.97))\n\n",
+      "dateUpdated": "Nov 17, 2016 10:32:26 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1479349786835_1123561441",
+      "id": "20161117-102946_793884356",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "Traceback (most recent call last):\n  File \"\u003cstdin\u003e\", line 1, in \u003cmodule\u003e\nNameError: name \u0027testVector\u0027 is not defined\nTraceback (most recent call last):\n  File \"\u003cstdin\u003e\", line 1, in \u003cmodule\u003e\n  File \"/Library/Python/2.7/site-packages/tdigest/tdigest.py\", line 170, in percentile\n    return self.C.max_item()[1].mean\n  File \"/Library/Python/2.7/site-packages/bintrees/abctree.py\", line 610, in max_item\n    raise ValueError(\"Tree is empty\")\nValueError: Tree is empty\n"
+      },
+      "dateCreated": "Nov 17, 2016 10:29:46 AM",
+      "dateStarted": "Nov 17, 2016 10:32:26 AM",
+      "dateFinished": "Nov 17, 2016 10:32:29 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val line \u003d \"600-182#1-155\"\nprintln(line.lastIndexOf(\"-\"))\nval cutline \u003d line.substring(0,line.lastIndexOf(\"-\"))",
+      "dateUpdated": "Nov 7, 2016 10:57:46 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478487051388_2133470816",
+      "id": "20161107-105051_479565093",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\nline: String \u003d 600-182#1-155\n9\n\ncutline: String \u003d 600-182#1\n"
+      },
+      "dateCreated": "Nov 7, 2016 10:50:51 AM",
+      "dateStarted": "Nov 7, 2016 10:57:46 AM",
+      "dateFinished": "Nov 7, 2016 10:57:47 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select * from ioeventlog limit 10",
+      "dateUpdated": "Nov 7, 2016 11:01:59 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478238390845_1856684121",
+      "id": "20161104-134630_685606680",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "id\taddr\tmacaddr\tiotypeno\teventno\tDate\tHour\n23842AE5-2A43-E611-9A57-204747873D4E\t600-183#1-65\t600-183#1\t10086\t1\t2016-07-06 11\t11\n24842AE5-2A43-E611-9A57-204747873D4E\t600-182#1-206\t600-182#1\t10086\t1\t2016-07-06 11\t11\n25842AE5-2A43-E611-9A57-204747873D4E\t600-187#1-53\t600-187#1\t10086\t1\t2016-07-06 11\t11\n26842AE5-2A43-E611-9A57-204747873D4E\t600-187#1-54\t600-187#1\t10086\t1\t2016-07-06 11\t11\n27842AE5-2A43-E611-9A57-204747873D4E\t600-187#1-55\t600-187#1\t10086\t1\t2016-07-06 11\t11\n28842AE5-2A43-E611-9A57-204747873D4E\t600-187#1-126\t600-187#1\t10086\t1\t2016-07-06 11\t11\n29842AE5-2A43-E611-9A57-204747873D4E\t600-188#1-69\t600-188#1\t10086\t1\t2016-07-06 11\t11\n2A842AE5-2A43-E611-9A57-204747873D4E\t600-182#1-207\t600-182#1\t10086\t1\t2016-07-06 11\t11\n2B842AE5-2A43-E611-9A57-204747873D4E\t600-185#0-113\t600-185#0\t10086\t1\t2016-07-06 11\t11\n2C842AE5-2A43-E611-9A57-204747873D4E\t600-188#1-99\t600-188#1\t10086\t1\t2016-07-06 11\t11\n"
+      },
+      "dateCreated": "Nov 4, 2016 1:46:30 AM",
+      "dateStarted": "Nov 7, 2016 11:01:59 AM",
+      "dateFinished": "Nov 7, 2016 11:01:59 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "\n//ioeventlog table\nval ioeventlogText \u003d sc.textFile(\"/Users/lynnjiang/Desktop/intern/LB 7-8/ioeventlog/ioeventlog_0706.csv\")\n\n//show top few lines of the text\n//ioeventlogText.take(4)\n\n//case class Ioeventlog(id : String, fc : String, addr : String, iotypeno : Integer, eventno : String, eventvalue : String, time : String, triggerid : String, status : Integer, eventtype : Integer, eventlevel : Integer)\n\ncase class Ioeventlog(id : String, addr : String,  iotypeno : Long, eventno : Integer, Date : String)\n\n//case class Operatelog(oplevel : Integer, fc : String, ip : String, port : Integer, descr : String, opresult : Integer, stat : Integer)\n//start with \"id\"\n//case class Operatelog(id : String)\n\nval ioeventlog \u003d ioeventlogText.map(s\u003d\u003es.split(\";\")).filter(s\u003d\u003es(0)!\u003d\"id\").map(\n    s \u003d\u003e Ioeventlog(s(0).replaceAll(\"\\\"\",\"\"),//id\n                    //s(1).replaceAll(\"\\\"\",\"\"),//fc\n                    s(2).replaceAll(\"\\\"\",\"\"),//addr\n                   //s(1).replaceAll(\"\\\"\",\"\"),\n                    s(3).toLong,//iotypeno\n                    s(4).toInt,//eventno\n                    s(6).replaceAll(\"\\\"\",\"\").substring(11,13)//Date\n    ) \n).toDF()\n\nioeventlog.registerTempTable(\"ioeventlog\")\n//%sql select count(1) from ioeventlog where Day \u003d \"2015-01-07\" and eventno \u003d 0 group by hour order by hour\n\n",
+      "dateUpdated": "Nov 4, 2016 1:28:22 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1477559696645_1934002337",
+      "id": "20161027-171456_894609787",
+      "dateCreated": "Oct 27, 2016 5:14:56 AM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select distinct iotypeno from ioeventlog\n",
+      "dateUpdated": "Nov 4, 2016 2:39:43 AM",
+      "config": {
+        "colWidth": 3.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "iotypeno",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "iotypeno",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql",
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478161790875_810020588",
+      "id": "20161103-162950_1626140112",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "iotypeno\n10086\n10\n11\n"
+      },
+      "dateCreated": "Nov 3, 2016 4:29:50 AM",
+      "dateStarted": "Nov 4, 2016 2:04:08 AM",
+      "dateFinished": "Nov 4, 2016 2:04:41 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select count(1) from ioeventlog where iotypeno \u003d 10",
+      "dateUpdated": "Nov 4, 2016 2:40:18 AM",
+      "config": {
+        "colWidth": 3.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478239563948_1064908635",
+      "id": "20161104-140603_1712507161",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "count(1)\n858\n"
+      },
+      "dateCreated": "Nov 4, 2016 2:06:03 AM",
+      "dateStarted": "Nov 4, 2016 2:07:01 AM",
+      "dateFinished": "Nov 4, 2016 2:08:03 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select count(1) from ioeventlog where iotypeno \u003d 11",
+      "dateUpdated": "Nov 4, 2016 2:40:56 AM",
+      "config": {
+        "colWidth": 3.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql",
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478239588879_-1144088042",
+      "id": "20161104-140628_246236393",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "count(1)\n310\n"
+      },
+      "dateCreated": "Nov 4, 2016 2:06:28 AM",
+      "dateStarted": "Nov 4, 2016 2:08:40 AM",
+      "dateFinished": "Nov 4, 2016 2:09:12 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select count(1) from ioeventlog where iotypeno \u003d 10086",
+      "dateUpdated": "Nov 4, 2016 2:40:27 AM",
+      "config": {
+        "colWidth": 3.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql",
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478239509607_-1208480671",
+      "id": "20161104-140509_2088781804",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "count(1)\n12721664\n"
+      },
+      "dateCreated": "Nov 4, 2016 2:05:09 AM",
+      "dateStarted": "Nov 4, 2016 2:05:56 AM",
+      "dateFinished": "Nov 4, 2016 2:06:29 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select  date, count(1) As sum_of_events from ioeventlog where iotypeno \u003d 11\ngroup by date\norder by date\n//RD reader",
+      "dateUpdated": "Nov 4, 2016 2:15:51 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "stackedAreaChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "date",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "date",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478159739394_1142533415",
+      "id": "20161103-155539_1286380121",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "date\tsum_of_events\n2016-07-06 10\t3\n2016-07-06 11\t7\n2016-07-06 12\t10\n2016-07-06 13\t18\n2016-07-06 14\t13\n2016-07-06 15\t28\n2016-07-06 16\t46\n2016-07-06 22\t3\n2016-07-07 02\t2\n2016-07-07 08\t17\n2016-07-07 09\t7\n2016-07-07 10\t7\n2016-07-07 11\t12\n2016-07-07 12\t13\n2016-07-07 13\t1\n2016-07-07 16\t2\n2016-07-08 09\t3\n2016-07-08 10\t13\n2016-07-08 11\t37\n2016-07-08 12\t4\n2016-07-08 13\t26\n2016-07-08 14\t4\n2016-07-08 15\t12\n2016-07-08 16\t10\n2016-07-08 17\t1\n2016-07-08 18\t1\n2016-07-09 09\t3\n2016-07-09 10\t3\n2016-07-09 11\t2\n2016-07-09 13\t1\n2016-07-10 18\t1\n"
+      },
+      "dateCreated": "Nov 3, 2016 3:55:39 AM",
+      "dateStarted": "Nov 4, 2016 2:11:09 AM",
+      "dateFinished": "Nov 4, 2016 2:11:42 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select  date, count(1) As sum_of_events from ioeventlog where iotypeno \u003d 10\ngroup by date\norder by date",
+      "dateUpdated": "Nov 4, 2016 2:41:49 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "stackedAreaChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "date",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "date",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478240131186_-2049436142",
+      "id": "20161104-141531_616469280",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "date\tsum_of_events\n2016-07-06 10\t8\n2016-07-06 11\t23\n2016-07-06 12\t38\n2016-07-06 13\t45\n2016-07-06 14\t48\n2016-07-06 15\t75\n2016-07-06 16\t80\n2016-07-06 22\t25\n2016-07-07 02\t28\n2016-07-07 08\t45\n2016-07-07 09\t27\n2016-07-07 10\t21\n2016-07-07 11\t37\n2016-07-07 12\t46\n2016-07-07 13\t2\n2016-07-07 16\t7\n2016-07-07 19\t1\n2016-07-08 09\t7\n2016-07-08 10\t40\n2016-07-08 11\t60\n2016-07-08 12\t44\n2016-07-08 13\t58\n2016-07-08 14\t9\n2016-07-08 15\t26\n2016-07-08 16\t18\n2016-07-08 17\t8\n2016-07-08 18\t3\n2016-07-09 09\t6\n2016-07-09 10\t11\n2016-07-09 11\t5\n2016-07-09 13\t3\n2016-07-09 18\t1\n2016-07-10 01\t1\n2016-07-10 10\t1\n2016-07-10 14\t1\n"
+      },
+      "dateCreated": "Nov 4, 2016 2:15:31 AM",
+      "dateStarted": "Nov 4, 2016 2:15:59 AM",
+      "dateFinished": "Nov 4, 2016 2:16:29 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select  date, count(1) As sum_of_events from ioeventlog where iotypeno \u003d 10086\ngroup by date\norder by date",
+      "dateUpdated": "Nov 4, 2016 2:41:53 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "stackedAreaChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "date",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "date",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478240223426_-340412176",
+      "id": "20161104-141703_16531275",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "date\tsum_of_events\n2016-07-06 00\t1\n2016-07-06 10\t10697\n2016-07-06 11\t115347\n2016-07-06 12\t120978\n2016-07-06 13\t120877\n2016-07-06 14\t120808\n2016-07-06 15\t120896\n2016-07-06 16\t120904\n2016-07-06 17\t121017\n2016-07-06 18\t120711\n2016-07-06 19\t121005\n2016-07-06 20\t121005\n2016-07-06 21\t120952\n2016-07-06 22\t69604\n2016-07-06 23\t53081\n2016-07-07 00\t25418\n2016-07-07 01\t121070\n2016-07-07 02\t113978\n2016-07-07 03\t121292\n2016-07-07 04\t120694\n2016-07-07 05\t120971\n2016-07-07 06\t121069\n2016-07-07 07\t121062\n2016-07-07 08\t120855\n2016-07-07 09\t120807\n2016-07-07 10\t120898\n2016-07-07 11\t120946\n2016-07-07 12\t120995\n2016-07-07 13\t120756\n2016-07-07 14\t120776\n2016-07-07 15\t121176\n2016-07-07 16\t121027\n2016-07-07 17\t120863\n2016-07-07 18\t120672\n2016-07-07 19\t120782\n2016-07-07 20\t120883\n2016-07-07 21\t121015\n2016-07-07 22\t120879\n2016-07-07 23\t121014\n2016-07-08 00\t120746\n2016-07-08 01\t120714\n2016-07-08 02\t120698\n2016-07-08 03\t120496\n2016-07-08 04\t120549\n2016-07-08 05\t121000\n2016-07-08 06\t120886\n2016-07-08 07\t120980\n2016-07-08 08\t120750\n2016-07-08 09\t120940\n2016-07-08 10\t120907\n2016-07-08 11\t120784\n2016-07-08 12\t120632\n2016-07-08 13\t120744\n2016-07-08 14\t120870\n2016-07-08 15\t120871\n2016-07-08 16\t120869\n2016-07-08 17\t121067\n2016-07-08 18\t120792\n2016-07-08 19\t120776\n2016-07-08 20\t120819\n2016-07-08 21\t120961\n2016-07-08 22\t120883\n2016-07-08 23\t120945\n2016-07-09 00\t120943\n2016-07-09 01\t121072\n2016-07-09 02\t121259\n2016-07-09 03\t121161\n2016-07-09 04\t121161\n2016-07-09 05\t120851\n2016-07-09 06\t120968\n2016-07-09 07\t121109\n2016-07-09 08\t121036\n2016-07-09 09\t120949\n2016-07-09 10\t121068\n2016-07-09 11\t121128\n2016-07-09 12\t121204\n2016-07-09 13\t120879\n2016-07-09 14\t120851\n2016-07-09 15\t120975\n2016-07-09 16\t121014\n2016-07-09 17\t121089\n2016-07-09 18\t121294\n2016-07-09 19\t121086\n2016-07-09 20\t121092\n2016-07-09 21\t121092\n2016-07-09 22\t121267\n2016-07-09 23\t120919\n2016-07-10 00\t120873\n2016-07-10 01\t120867\n2016-07-10 02\t120790\n2016-07-10 03\t120731\n2016-07-10 04\t120745\n2016-07-10 05\t120923\n2016-07-10 06\t121041\n2016-07-10 07\t120901\n2016-07-10 08\t120826\n2016-07-10 09\t120877\n2016-07-10 10\t120940\n2016-07-10 11\t120715\n2016-07-10 12\t120866\n2016-07-10 13\t120940\n2016-07-10 14\t121023\n2016-07-10 15\t107559\n2016-07-10 16\t91882\n2016-07-10 17\t91880\n2016-07-10 18\t91961\n2016-07-10 19\t92029\n2016-07-10 20\t92033\n2016-07-10 21\t91738\n2016-07-10 22\t91946\n2016-07-10 23\t92067\n2016-07-11 00\t2577\n2016-07-11 23\t1\n2016-07-12 17\t1\n2016-07-23 16\t5\n"
+      },
+      "dateCreated": "Nov 4, 2016 2:17:03 AM",
+      "dateStarted": "Nov 4, 2016 2:17:17 AM",
+      "dateFinished": "Nov 4, 2016 2:17:53 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select hour,count(1) as sum_of_event from ioeventlog where Day \u003d \"${Choose Date(yyyy-mm-dd) \u003d 2015-01-07}\"  and eventno \u003d  ${eventno \u003d 4} group by hour order by hour\n",
+      "dateUpdated": "Nov 1, 2016 9:39:01 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "pieChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "hour",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "sum_of_event",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "hour",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {
+          "Choose Date": "2015-01-07",
+          "eventno": "0"
+        },
+        "forms": {
+          "Choose Date": {
+            "name": "Choose Date",
+            "displayName": "yyyy-mm-dd",
+            "defaultValue": " 2015-01-07",
+            "hidden": false
+          },
+          "eventno": {
+            "name": "eventno",
+            "defaultValue": " 4",
+            "hidden": false
+          }
+        }
+      },
+      "jobName": "paragraph_1477476581112_195195569",
+      "id": "20161026-180941_618647782",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "hour\tsum_of_event\n11\t71\n12\t296\n14\t287\n"
+      },
+      "dateCreated": "Oct 26, 2016 6:09:41 AM",
+      "dateStarted": "Oct 27, 2016 11:12:51 AM",
+      "dateFinished": "Oct 27, 2016 11:13:00 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select a.descr, count(1) as sum_of_events from\n(select Date, hour, ioevent.descr\nfrom ioeventlog \ninner join iotype on ioeventlog.iotypeno \u003d iotype.iotypeno inner join ioevent on ioeventlog.eventno \u003d ioevent.eventno)a\n group by a.descr\n order by a.descr",
+      "dateUpdated": "Nov 4, 2016 2:43:46 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "multiBarChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "descr",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "descr",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478240514911_-1599847815",
+      "id": "20161104-142154_1340167203",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "descr\tsum_of_events\nDALI灯开亮度10\t333\nDALI灯开亮度12\t231\nDALI灯开亮度16\t2\nDALI灯开亮度3\t4\nDALI灯开亮度4\t308\nDALI灯开亮度6\t62\nDALI灯开亮度7\t23\nDALI灯开亮度9\t205\nDALI组调亮度10\t333\nDALI组调亮度12\t231\nDALI组调亮度16\t2\nDALI组调亮度3\t4\nDALI组调亮度4\t308\nDALI组调亮度6\t62\nDALI组调亮度7\t23\nDALI组调亮度9\t205\n主板连线\t12\n停止\t4\n关门(上锁延时)\t410\n关门上锁\t666\n刷卡开电梯\t308\n刷卡开门\t1232\n剪断线报警\t333\n剪线报警\t8\n反向开关\t616\n取卡\t16\n取卡延时\t1236\n布防\t4\n应答错误\t4\n开关\t8\n开度\t308\n开路\t4\n按钮开门\t124\n控制中心开门\t8\n控制板离线\t4\n控制箱被打开\t308\n撤防\t308\n数值报警\t308\n未授权,刷卡无效\t2\n未授权，刷卡无效\t4\n短按\t62\n短路\t308\n短路报警\t616\n输入点开路\t4\n连续上行\t62\n连续下行\t23\n锁定\t333\n长按\t62\n门关闭\t69\n门磁报警\t4\n门非法打开\t462\n"
+      },
+      "dateCreated": "Nov 4, 2016 2:21:54 AM",
+      "dateStarted": "Nov 4, 2016 2:26:36 AM",
+      "dateFinished": "Nov 4, 2016 2:27:17 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select a.descr, count(1) as sum_of_events from\n(select Date, hour, ioevent.descr\nfrom ioeventlog \ninner join iotype on ioeventlog.iotypeno \u003d iotype.iotypeno inner join ioevent on ioeventlog.eventno \u003d ioevent.eventno)a\n group by a.descr\n order by sum_of_events desc\n limit 10",
+      "dateUpdated": "Nov 4, 2016 2:47:26 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "pieChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "descr",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "descr",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478241914513_2002976468",
+      "id": "20161104-144514_574226200",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "descr\tsum_of_events\n取卡延时\t1236\n刷卡开门\t1232\n关门上锁\t666\n反向开关\t616\n短路报警\t616\n门非法打开\t462\n关门(上锁延时)\t410\n剪断线报警\t333\nDALI组调亮度10\t333\n锁定\t333\n"
+      },
+      "dateCreated": "Nov 4, 2016 2:45:14 AM",
+      "dateStarted": "Nov 4, 2016 2:46:41 AM",
+      "dateFinished": "Nov 4, 2016 2:47:22 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select a.descr, count(1) as sum_of_events from\n(select Date, hour, ioevent.descr\nfrom ioeventlog \ninner join iotype on ioeventlog.iotypeno \u003d iotype.iotypeno inner join ioevent on ioeventlog.eventno \u003d ioevent.eventno)a\nwhere a.descr like \"%DALI组调%\"\n group by a.descr\n order by sum_of_events desc\n",
+      "dateUpdated": "Nov 4, 2016 2:53:31 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "pieChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "descr",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "descr",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478242059968_-1933942844",
+      "id": "20161104-144739_470913987",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "descr\tsum_of_events\nDALI组调亮度10\t333\nDALI组调亮度4\t308\nDALI组调亮度12\t231\nDALI组调亮度9\t205\nDALI组调亮度6\t62\nDALI组调亮度7\t23\nDALI组调亮度3\t4\nDALI组调亮度16\t2\n"
+      },
+      "dateCreated": "Nov 4, 2016 2:47:39 AM",
+      "dateStarted": "Nov 4, 2016 2:48:54 AM",
+      "dateFinished": "Nov 4, 2016 2:49:36 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select Hour, count(1) as sum_of_events from\n(select Date, hour, ioevent.descr\nfrom ioeventlog \ninner join iotype on ioeventlog.iotypeno \u003d iotype.iotypeno inner join ioevent on ioeventlog.eventno \u003d ioevent.eventno)a\nwhere a.descr \u003d \u0027DALI组调亮度4\u0027\n group by Hour\n order by Hour",
+      "dateUpdated": "Nov 4, 2016 2:54:06 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "lineChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "Hour",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "Hour",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478242295764_-1819750686",
+      "id": "20161104-145135_299857704",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "Hour\tsum_of_events\n2\t2\n8\t17\n9\t13\n10\t26\n11\t56\n12\t27\n13\t46\n14\t17\n15\t40\n16\t58\n17\t1\n18\t2\n22\t3\n"
+      },
+      "dateCreated": "Nov 4, 2016 2:51:35 AM",
+      "dateStarted": "Nov 4, 2016 2:53:01 AM",
+      "dateFinished": "Nov 4, 2016 2:53:44 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select Hour, count(1) as sum_of_events from ioeventlog\nwhere Date like \"%2016-07-06%\" and iotypeno \u003d 10 \ngroup by Hour\norder by Hour",
+      "dateUpdated": "Nov 4, 2016 4:17:05 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "multiBarChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "Hour",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "Hour",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478247086211_1300566109",
+      "id": "20161104-161126_233037072",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "Hour\tsum_of_events\n10\t8\n11\t23\n12\t38\n13\t45\n14\t48\n15\t75\n16\t80\n22\t25\n"
+      },
+      "dateCreated": "Nov 4, 2016 4:11:26 AM",
+      "dateStarted": "Nov 4, 2016 4:15:55 AM",
+      "dateFinished": "Nov 4, 2016 4:17:00 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select Hour, count(1) as sum_of_events from\n(select Date, hour, ioevent.descr\nfrom ioeventlog \ninner join iotype on ioeventlog.iotypeno \u003d iotype.iotypeno inner join ioevent on ioeventlog.eventno \u003d ioevent.eventno)a\nwhere a.descr \u003d \u0027DALI灯开亮度10\u0027\n group by Hour\n order by Hour",
+      "dateUpdated": "Nov 4, 2016 3:23:49 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "lineChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "Hour",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "Hour",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478242313717_-570040286",
+      "id": "20161104-145153_1260635968",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "Hour\tsum_of_events\n2\t8\n8\t16\n9\t13\n10\t34\n11\t46\n12\t40\n13\t45\n14\t24\n15\t46\n16\t50\n17\t2\n18\t1\n19\t1\n22\t7\n"
+      },
+      "dateCreated": "Nov 4, 2016 2:51:53 AM",
+      "dateStarted": "Nov 4, 2016 3:23:49 AM",
+      "dateFinished": "Nov 4, 2016 3:25:02 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select a.descr, count(1) as sum_of_events from\n(select Date, hour, ioevent.descr\nfrom ioeventlog \ninner join iotype on ioeventlog.iotypeno \u003d iotype.iotypeno inner join ioevent on ioeventlog.eventno \u003d ioevent.eventno)a\nwhere a.descr like \"%DALI灯%\"\n group by a.descr\n order by sum_of_events desc",
+      "dateUpdated": "Nov 4, 2016 2:52:02 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "pieChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "descr",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "descr",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478242242797_703939943",
+      "id": "20161104-145042_432754271",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "descr\tsum_of_events\nDALI灯开亮度10\t333\nDALI灯开亮度4\t308\nDALI灯开亮度12\t231\nDALI灯开亮度9\t205\nDALI灯开亮度6\t62\nDALI灯开亮度7\t23\nDALI灯开亮度3\t4\nDALI灯开亮度16\t2\n"
+      },
+      "dateCreated": "Nov 4, 2016 2:50:42 AM",
+      "dateStarted": "Nov 4, 2016 2:51:09 AM",
+      "dateFinished": "Nov 4, 2016 2:51:53 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select Hour, count(1) as sum_of_events from\n(select Date, hour, ioevent.descr\nfrom ioeventlog \ninner join iotype on ioeventlog.iotypeno \u003d iotype.iotypeno inner join ioevent on ioeventlog.eventno \u003d ioevent.eventno)a\nwhere a.descr \u003d \u0027DALI灯开亮度4\u0027\n group by Hour\n order by Hour",
+      "dateUpdated": "Nov 4, 2016 2:56:33 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "lineChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "Hour",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "Hour",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478242513512_-472639162",
+      "id": "20161104-145513_928020620",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "Hour\tsum_of_events\n2\t2\n8\t17\n9\t13\n10\t26\n11\t56\n12\t27\n13\t46\n14\t17\n15\t40\n16\t58\n17\t1\n18\t2\n22\t3\n"
+      },
+      "dateCreated": "Nov 4, 2016 2:55:13 AM",
+      "dateStarted": "Nov 4, 2016 2:55:46 AM",
+      "dateFinished": "Nov 4, 2016 2:56:28 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select Date, count(1) as sum_of_events from\n(select Date, hour, ioevent.descr\nfrom ioeventlog \ninner join iotype on ioeventlog.iotypeno \u003d iotype.iotypeno inner join ioevent on ioeventlog.eventno \u003d ioevent.eventno)a\nwhere a.descr \u003d \u0027刷卡开门\u0027\n group by Date\n order by Date",
+      "dateUpdated": "Nov 4, 2016 2:31:40 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "lineChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "Date",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "Date",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478240971199_-1574362442",
+      "id": "20161104-142931_1510621616",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "Date\tsum_of_events\n2016-07-06 10\t12\n2016-07-06 11\t28\n2016-07-06 12\t40\n2016-07-06 13\t72\n2016-07-06 14\t52\n2016-07-06 15\t112\n2016-07-06 16\t184\n2016-07-06 22\t12\n2016-07-07 02\t8\n2016-07-07 08\t68\n2016-07-07 09\t28\n2016-07-07 10\t28\n2016-07-07 11\t48\n2016-07-07 12\t52\n2016-07-07 13\t4\n2016-07-07 16\t8\n2016-07-08 09\t12\n2016-07-08 10\t52\n2016-07-08 11\t148\n2016-07-08 12\t16\n2016-07-08 13\t104\n2016-07-08 14\t16\n2016-07-08 15\t48\n2016-07-08 16\t40\n2016-07-08 17\t4\n2016-07-08 18\t4\n2016-07-09 09\t12\n2016-07-09 10\t12\n2016-07-09 13\t4\n2016-07-10 18\t4\n"
+      },
+      "dateCreated": "Nov 4, 2016 2:29:31 AM",
+      "dateStarted": "Nov 4, 2016 2:30:50 AM",
+      "dateFinished": "Nov 4, 2016 2:31:31 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select Date, count(1) as sum_of_events from\n(select Date, hour, ioevent.descr\nfrom ioeventlog \ninner join iotype on ioeventlog.iotypeno \u003d iotype.iotypeno inner join ioevent on ioeventlog.eventno \u003d ioevent.eventno)a\nwhere a.descr \u003d \u0027取卡延时\u0027\n group by Date\n order by Date",
+      "dateUpdated": "Nov 4, 2016 2:40:34 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "lineChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "Date",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "Date",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478241380746_1973957191",
+      "id": "20161104-143620_1737125018",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "Date\tsum_of_events\n2016-07-06 10\t12\n2016-07-06 11\t28\n2016-07-06 12\t40\n2016-07-06 13\t72\n2016-07-06 14\t52\n2016-07-06 15\t112\n2016-07-06 16\t184\n2016-07-06 22\t12\n2016-07-07 02\t12\n2016-07-07 08\t68\n2016-07-07 09\t28\n2016-07-07 10\t28\n2016-07-07 11\t48\n2016-07-07 12\t52\n2016-07-07 13\t4\n2016-07-07 16\t8\n2016-07-08 09\t12\n2016-07-08 10\t52\n2016-07-08 11\t148\n2016-07-08 12\t16\n2016-07-08 13\t104\n2016-07-08 14\t16\n2016-07-08 15\t48\n2016-07-08 16\t40\n2016-07-08 17\t4\n2016-07-08 18\t4\n2016-07-09 09\t12\n2016-07-09 10\t12\n2016-07-09 13\t4\n2016-07-10 18\t4\n"
+      },
+      "dateCreated": "Nov 4, 2016 2:36:20 AM",
+      "dateStarted": "Nov 4, 2016 2:39:27 AM",
+      "dateFinished": "Nov 4, 2016 2:40:13 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select Date, count(1) as sum_of_events from\n(select Date, hour, ioevent.descr\nfrom ioeventlog \ninner join iotype on ioeventlog.iotypeno \u003d iotype.iotypeno inner join ioevent on ioeventlog.eventno \u003d ioevent.eventno)a\nwhere a.descr \u003d \u0027关门上锁\u0027\n group by Date\n order by Date",
+      "dateUpdated": "Nov 4, 2016 2:35:27 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "lineChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "Date",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "Date",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478241180904_-897898900",
+      "id": "20161104-143300_154376969",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "Date\tsum_of_events\n2016-07-06 10\t6\n2016-07-06 11\t14\n2016-07-06 12\t26\n2016-07-06 13\t40\n2016-07-06 14\t38\n2016-07-06 15\t70\n2016-07-06 16\t80\n2016-07-06 22\t14\n2016-07-07 02\t16\n2016-07-07 08\t32\n2016-07-07 09\t16\n2016-07-07 10\t16\n2016-07-07 11\t26\n2016-07-07 12\t30\n2016-07-07 13\t2\n2016-07-07 16\t4\n2016-07-07 19\t2\n2016-07-08 09\t6\n2016-07-08 10\t36\n2016-07-08 11\t50\n2016-07-08 12\t24\n2016-07-08 13\t46\n2016-07-08 14\t10\n2016-07-08 15\t22\n2016-07-08 16\t16\n2016-07-08 17\t4\n2016-07-08 18\t2\n2016-07-09 09\t4\n2016-07-09 10\t8\n2016-07-09 11\t2\n2016-07-09 13\t2\n2016-07-10 10\t2\n"
+      },
+      "dateCreated": "Nov 4, 2016 2:33:00 AM",
+      "dateStarted": "Nov 4, 2016 2:35:27 AM",
+      "dateFinished": "Nov 4, 2016 2:36:09 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select a.descr, count(1) as sum_of_events from\n(select Date, hour, ioevent.descr\nfrom ioeventlog \ninner join iotype on ioeventlog.iotypeno \u003d iotype.iotypeno inner join ioevent on ioeventlog.eventno \u003d ioevent.eventno)a\n where Date like \u0027%2016-07-09%\u0027 and hour \u003d10 \n group by a.descr\n order by a.descr\n\n",
+      "dateUpdated": "Nov 4, 2016 2:25:37 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "multiBarChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "descr",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "sum_of_events",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "descr",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {
+          "hour": "14",
+          "Choose Date": "2015-01-07"
+        },
+        "forms": {}
+      },
+      "jobName": "paragraph_1477539647952_-1591212776",
+      "id": "20161027-114047_1710030233",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "descr\tsum_of_events\nDALI灯开亮度10\t4\nDALI灯开亮度12\t2\nDALI灯开亮度4\t3\nDALI灯开亮度6\t1\nDALI灯开亮度9\t4\nDALI组调亮度10\t4\nDALI组调亮度12\t2\nDALI组调亮度4\t3\nDALI组调亮度6\t1\nDALI组调亮度9\t4\n关门(上锁延时)\t8\n关门上锁\t8\n刷卡开电梯\t3\n刷卡开门\t12\n剪断线报警\t4\n反向开关\t6\n取卡延时\t12\n开度\t3\n按钮开门\t2\n控制箱被打开\t3\n撤防\t3\n数值报警\t3\n短按\t1\n短路\t3\n短路报警\t6\n连续上行\t1\n锁定\t4\n长按\t1\n门非法打开\t4\n"
+      },
+      "dateCreated": "Oct 27, 2016 11:40:47 AM",
+      "dateStarted": "Nov 4, 2016 2:25:38 AM",
+      "dateFinished": "Nov 4, 2016 2:26:09 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select a.name, count(1) as sum_of_machine from \n(select *from ioeventlog left join machine on ioeventlog.macaddr \u003d machine.address )a\ngroup by a.name ",
+      "dateUpdated": "Nov 7, 2016 11:08:11 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "multiBarChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "name",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "sum_of_machine",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "name",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "sum_of_machine",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {
+          "hour": "14",
+          "Choose Date": "2015-01-07"
+        },
+        "forms": {}
+      },
+      "jobName": "paragraph_1477536698570_787863173",
+      "id": "20161027-105138_2106753751",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "name\tsum_of_machine\n610-RT-漏水温湿度空调BA\t788325\n610-RT-UPS主机\t1092658\n科研机房控制器\t72\n服务器机房控制器\t156\n603-RT\t2846941\nUPS机房控制器\t99\n网络机房控制器\t353\n605-RT\t1450854\n610-RT-电表5#-7#\t2167774\n610-RT-电池组\t311005\n监控中心、办公区、操作间控制器\t488\n601-RT\t1401893\n610-RT-电表1#-4#\t2662214\n"
+      },
+      "dateCreated": "Oct 27, 2016 10:51:38 AM",
+      "dateStarted": "Nov 7, 2016 11:08:11 AM",
+      "dateFinished": "Nov 7, 2016 11:09:29 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select a.date, count(1) as sum_of_machine from \n(select * from ioeventlog left join machine on ioeventlog.macaddr \u003d machine.address)a\nwhere a.name \u003d \u0027603-RT\u0027\ngroup by a.date order by a.date",
+      "dateUpdated": "Nov 7, 2016 11:59:48 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "stackedAreaChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "date",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "sum_of_machine",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "date",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "sum_of_machine",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {
+          "machinename": "左-红"
+        },
+        "forms": {}
+      },
+      "jobName": "paragraph_1477554619162_1393779373",
+      "id": "20161027-155019_1154997431",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "date\tsum_of_machine\n2016-07-06 10\t2593\n2016-07-06 11\t27607\n2016-07-06 12\t28823\n2016-07-06 13\t28795\n2016-07-06 14\t28730\n2016-07-06 15\t28858\n2016-07-06 16\t28809\n2016-07-06 17\t28831\n2016-07-06 18\t28797\n2016-07-06 19\t28895\n2016-07-06 20\t28895\n2016-07-06 21\t28899\n2016-07-06 22\t16431\n2016-07-06 23\t12723\n2016-07-07 00\t6099\n2016-07-07 01\t28862\n2016-07-07 02\t27010\n2016-07-07 03\t28843\n2016-07-07 04\t28800\n2016-07-07 05\t28918\n2016-07-07 06\t28892\n2016-07-07 07\t28868\n2016-07-07 08\t28792\n2016-07-07 09\t28703\n2016-07-07 10\t28763\n2016-07-07 11\t28845\n2016-07-07 12\t28864\n2016-07-07 13\t28756\n2016-07-07 14\t28765\n2016-07-07 15\t28869\n2016-07-07 16\t28932\n2016-07-07 17\t28727\n2016-07-07 18\t28727\n2016-07-07 19\t28731\n2016-07-07 20\t28881\n2016-07-07 21\t28924\n2016-07-07 22\t28836\n2016-07-07 23\t28857\n2016-07-08 00\t28845\n2016-07-08 01\t28788\n2016-07-08 02\t28785\n2016-07-08 03\t28714\n2016-07-08 04\t28699\n2016-07-08 05\t28780\n2016-07-08 06\t28867\n2016-07-08 07\t28895\n2016-07-08 08\t28822\n2016-07-08 09\t28798\n2016-07-08 10\t28698\n2016-07-08 11\t28791\n2016-07-08 12\t28630\n2016-07-08 13\t28798\n2016-07-08 14\t28723\n2016-07-08 15\t28796\n2016-07-08 16\t28821\n2016-07-08 17\t28921\n2016-07-08 18\t28858\n2016-07-08 19\t28769\n2016-07-08 20\t28768\n2016-07-08 21\t28740\n2016-07-08 22\t28775\n2016-07-08 23\t28839\n2016-07-09 00\t28806\n2016-07-09 01\t28811\n2016-07-09 02\t29021\n2016-07-09 03\t28897\n2016-07-09 04\t28909\n2016-07-09 05\t28797\n2016-07-09 06\t28660\n2016-07-09 07\t28859\n2016-07-09 08\t28860\n2016-07-09 09\t28805\n2016-07-09 10\t28815\n2016-07-09 11\t28842\n2016-07-09 12\t28856\n2016-07-09 13\t28914\n2016-07-09 14\t28772\n2016-07-09 15\t28805\n2016-07-09 16\t28787\n2016-07-09 17\t28837\n2016-07-09 18\t28896\n2016-07-09 19\t28845\n2016-07-09 20\t28712\n2016-07-09 21\t28772\n2016-07-09 22\t28915\n2016-07-09 23\t28861\n2016-07-10 00\t28817\n2016-07-10 01\t28736\n2016-07-10 02\t28768\n2016-07-10 03\t28854\n2016-07-10 04\t28838\n2016-07-10 05\t28851\n2016-07-10 06\t28862\n2016-07-10 07\t28759\n2016-07-10 08\t28821\n2016-07-10 09\t28817\n2016-07-10 10\t28808\n2016-07-10 11\t28759\n2016-07-10 12\t28764\n2016-07-10 13\t28863\n2016-07-10 14\t28868\n2016-07-10 15\t15671\n2016-07-10 16\t197\n2016-07-10 17\t137\n2016-07-10 18\t174\n2016-07-10 19\t123\n2016-07-10 20\t149\n2016-07-10 21\t127\n2016-07-10 22\t136\n2016-07-10 23\t116\n2016-07-23 16\t2\n"
+      },
+      "dateCreated": "Oct 27, 2016 3:50:19 AM",
+      "dateStarted": "Nov 7, 2016 11:59:48 AM",
+      "dateFinished": "Nov 7, 2016 12:01:06 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select distinct a.desc from  \n(select * from ioeventlog\nleft join machine on ioeventlog.macaddr \u003d machine.address\nleft join machinetype on machine.machinetypeid \u003d machinetype.id)a ",
+      "dateUpdated": "Nov 7, 2016 11:21:49 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "id",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "addr",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "id",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "addr",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478488667206_1066648007",
+      "id": "20161107-111747_1976486298",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "desc\n门禁控制器\nMODBUS虚拟控制器\n"
+      },
+      "dateCreated": "Nov 7, 2016 11:17:47 AM",
+      "dateStarted": "Nov 7, 2016 11:21:49 AM",
+      "dateFinished": "Nov 7, 2016 11:23:20 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select distinct a.desc from  \n(select *  from machine \nleft join machinetype on machine.machinetypeid \u003d machinetype.id)a ",
+      "dateUpdated": "Nov 7, 2016 11:33:40 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1478489563585_-1432044334",
+      "id": "20161107-113243_1772260451",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "desc\n门禁控制器\n视频虚拟控制器\nMODBUS虚拟控制器\n"
+      },
+      "dateCreated": "Nov 7, 2016 11:32:43 AM",
+      "dateStarted": "Nov 7, 2016 11:33:40 AM",
+      "dateFinished": "Nov 7, 2016 11:33:41 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select Date, count(1) as sum_of_machinetype from \n(select * from ioeventlog\ninner join machine on ioeventlog.addr \u003d machine.address where machinetypeid !\u003d \u0027null\u0027)a\ninner join machinetype on a.machinetypeid \u003d machinetype.id \nwhere  desc \u003d \u0027${typename \u003d EXP4路扩展}\u0027\ngroup by Date\norder by Date",
+      "dateUpdated": "Nov 17, 2016 10:23:13 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "Date",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "sum_of_machinetype",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "Date",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "sum_of_machinetype",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {
+          "typename": "EXP4路扩展"
+        },
+        "forms": {
+          "typename": {
+            "name": "typename",
+            "defaultValue": " EXP4路扩展",
+            "hidden": false
+          }
+        }
+      },
+      "jobName": "paragraph_1477633385598_-888955201",
+      "id": "20161028-134305_1709642920",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "Date\tsum_of_machinetype\n2016-01-04 14\t12\n2016-01-05 09\t28\n2016-01-05 17\t6\n2016-01-06 09\t3\n2016-01-07 15\t6\n2016-01-08 15\t27\n2016-01-08 16\t30\n2016-01-08 17\t6\n2016-01-11 14\t45\n2016-01-11 15\t153\n2016-01-11 16\t127\n2016-01-11 17\t132\n2016-01-12 10\t58\n2016-01-12 13\t95\n2016-01-12 15\t53\n2016-01-12 16\t157\n2016-01-12 17\t30\n2016-01-12 18\t87\n2016-01-13 16\t12\n2016-01-13 17\t75\n2016-01-13 18\t78\n2016-01-14 09\t4\n2016-01-14 10\t15\n2016-01-14 11\t50\n2016-01-14 12\t34\n2016-01-14 13\t29\n2016-01-14 14\t6\n2016-01-14 17\t12\n2016-01-15 18\t89\n2016-01-16 09\t9\n2016-01-16 10\t3\n2016-01-16 11\t60\n2016-01-16 12\t44\n2016-01-16 14\t27\n2016-01-16 15\t9\n2016-01-16 16\t6\n2016-01-18 10\t6\n2016-01-19 10\t21\n2016-01-19 11\t6\n2016-01-20 09\t21\n2016-01-20 10\t81\n2016-01-20 13\t9\n2016-01-31 10\t4\n2016-01-31 11\t45\n2016-01-31 13\t26\n2016-01-31 14\t122\n2016-01-31 15\t113\n2016-01-31 16\t83\n2016-01-31 17\t12\n2016-02-01 09\t69\n2016-02-01 10\t77\n2016-02-01 11\t6\n2016-02-01 14\t17\n2016-02-15 15\t88\n2016-02-16 10\t44\n2016-02-16 11\t12\n2016-02-19 11\t7\n2016-02-19 14\t46\n2016-02-19 15\t31\n2016-02-19 16\t33\n2016-02-19 17\t15\n2016-02-22 09\t6\n2016-02-22 10\t66\n2016-02-22 11\t12\n2016-02-22 13\t12\n2016-02-22 14\t87\n2016-02-22 15\t21\n2016-02-22 16\t48\n2016-02-22 17\t6\n2016-02-23 08\t12\n2016-02-23 09\t45\n2016-02-23 10\t18\n2016-02-23 11\t36\n2016-02-23 12\t6\n2016-02-23 14\t3\n2016-02-23 15\t6\n2016-02-23 17\t38\n2016-02-24 13\t6\n2016-02-24 14\t27\n2016-02-24 16\t12\n2016-02-24 17\t20\n2016-02-25 09\t59\n2016-02-25 10\t317\n2016-02-25 11\t4579\n2016-02-25 12\t6\n2016-02-25 13\t111\n2016-02-25 14\t5563\n2016-02-26 19\t70\n2016-02-27 08\t47\n2016-02-27 09\t17\n2016-02-27 10\t37\n2016-02-27 13\t1\n2016-02-27 16\t2\n2016-02-27 18\t34\n2016-02-29 10\t6\n2016-02-29 11\t25\n2016-02-29 17\t21\n2016-03-08 17\t60\n2016-03-08 18\t6\n2016-03-08 19\t19\n2016-03-08 20\t6\n2016-03-09 09\t36\n2016-03-09 10\t40\n2016-03-09 11\t113\n2016-03-09 12\t27\n2016-03-09 13\t23\n2016-03-09 14\t96\n2016-03-09 15\t30\n2016-03-09 16\t66\n2016-03-10 09\t63\n2016-03-10 10\t84\n2016-03-10 11\t70\n2016-03-10 12\t45\n2016-03-10 13\t98\n2016-03-10 14\t49\n2016-03-10 15\t21\n2016-03-10 16\t64\n2016-03-11 09\t36\n2016-03-11 10\t23\n2016-03-11 11\t24\n2016-03-11 12\t25\n2016-03-21 14\t9\n2016-03-21 16\t85\n2016-03-21 17\t55\n2016-03-21 18\t110\n2016-03-22 08\t12\n2016-03-22 09\t3\n2016-03-22 11\t36\n2016-03-22 12\t6\n2016-03-22 13\t26\n2016-03-22 14\t21\n2016-04-08 09\t21\n2016-04-08 11\t15\n2016-04-09 08\t12\n2016-04-09 14\t58\n2016-04-09 15\t3\n2016-04-12 08\t16\n2016-04-12 09\t18\n2016-04-12 10\t69\n2016-04-14 08\t37\n2016-04-14 10\t18\n2016-04-14 11\t6\n2016-04-14 15\t11\n2016-04-18 09\t45\n2016-04-18 10\t49\n2016-04-18 11\t152\n2016-04-18 12\t12\n2016-04-18 17\t42\n2016-04-18 18\t13\n2016-04-19 09\t43\n2016-04-19 10\t91\n2016-04-19 11\t12\n2016-04-19 12\t6\n2016-04-19 13\t6\n2016-04-19 14\t18\n2016-04-19 15\t9\n2016-04-20 10\t3\n2016-04-21 11\t9\n2016-04-22 09\t14\n2016-04-22 10\t29\n2016-04-22 15\t6\n2016-04-22 16\t20\n2016-04-22 17\t13\n2016-04-22 18\t21\n2016-04-23 11\t6\n2016-04-23 14\t2\n2016-04-23 17\t18\n2016-04-25 09\t3\n2016-04-25 10\t1\n2016-04-25 11\t19\n2016-04-25 14\t43\n2016-04-26 15\t15\n2016-04-27 09\t61\n2016-04-27 10\t13\n2016-04-27 11\t19\n2016-04-27 14\t3\n2016-04-27 15\t6\n2016-04-28 10\t18\n2016-04-28 11\t110\n2016-04-28 12\t27\n2016-04-28 14\t9\n2016-04-28 15\t9\n2016-04-28 16\t21\n2016-04-29 09\t3\n2016-04-29 14\t2\n2016-04-29 15\t3\n2016-04-29 16\t6\n2016-05-04 08\t18\n2016-05-04 11\t43\n2016-05-04 13\t56\n2016-05-04 14\t48\n2016-05-04 16\t15\n2016-05-04 17\t14\n2016-05-05 09\t6\n2016-05-05 10\t6\n2016-05-05 11\t30\n2016-05-06 11\t23\n2016-05-06 13\t11\n2016-05-06 14\t12\n2016-05-07 11\t6\n2016-05-07 13\t45\n2016-05-07 14\t33\n2016-05-07 15\t20\n2016-05-07 16\t6\n2016-05-09 19\t1\n2016-05-10 09\t9\n2016-05-10 11\t32\n2016-05-10 15\t10\n2016-05-10 17\t13\n2016-05-11 16\t6\n2016-05-12 10\t12\n2016-05-13 11\t17\n2016-05-16 08\t3\n2016-05-16 17\t18\n2016-05-17 10\t11\n2016-05-17 14\t12\n2016-05-17 15\t9\n2016-05-17 18\t12\n2016-05-20 14\t3\n2016-05-20 15\t3\n2016-05-20 16\t3\n2016-05-23 14\t3\n2016-05-23 15\t23\n2016-05-23 16\t2\n2016-05-24 16\t9\n2016-05-24 17\t45\n2016-05-25 11\t10\n2016-05-25 13\t30\n2016-05-25 14\t42\n2016-05-25 15\t53\n2016-05-25 16\t2\n2016-05-25 17\t9\n2016-05-26 10\t3\n2016-05-26 11\t87\n2016-05-26 12\t92\n2016-05-26 14\t78\n2016-05-26 16\t18\n2016-05-30 10\t90\n2016-05-30 11\t18\n2016-05-30 16\t7\n2016-05-30 17\t14\n2016-05-31 10\t10\n2016-05-31 11\t8\n2016-05-31 12\t3\n2016-05-31 19\t44\n2016-05-31 20\t92\n2016-06-01 09\t21\n2016-06-01 10\t30\n2016-06-01 16\t6\n2016-06-01 18\t18\n2016-06-01 20\t30\n2016-06-02 08\t45\n2016-06-02 10\t18\n2016-06-02 11\t12\n2016-06-02 18\t6\n2016-06-02 19\t3\n2016-06-02 21\t3\n2016-06-03 10\t49\n2016-06-03 11\t15\n2016-06-03 14\t33\n2016-06-03 15\t57\n2016-06-03 16\t9\n2016-06-03 17\t9\n2016-06-03 18\t5\n2016-06-03 19\t54\n2016-06-04 08\t9\n2016-06-04 09\t18\n2016-06-04 10\t27\n2016-06-04 14\t42\n2016-06-04 15\t9\n2016-06-04 16\t12\n2016-06-04 17\t9\n2016-06-04 18\t3\n2016-06-04 19\t9\n2016-06-04 20\t6\n2016-06-04 21\t2\n2016-06-06 08\t9\n2016-06-06 09\t3\n2016-06-06 11\t26\n2016-06-06 12\t24\n2016-06-06 13\t9\n2016-06-06 15\t6\n2016-06-06 16\t75\n2016-06-06 17\t27\n2016-06-06 20\t3\n2016-06-07 08\t3\n2016-06-09 09\t44\n2016-06-09 10\t72\n2016-06-09 11\t88\n2016-06-09 12\t112\n2016-06-09 13\t142\n2016-06-09 14\t88\n2016-06-09 15\t88\n2016-06-09 16\t76\n2016-06-09 17\t50\n2016-06-10 09\t63\n2016-06-10 10\t78\n2016-06-10 11\t53\n2016-06-10 12\t68\n2016-06-10 13\t88\n2016-06-10 14\t114\n2016-06-10 15\t88\n2016-06-10 16\t102\n2016-06-10 17\t21\n2016-06-11 09\t32\n2016-06-11 10\t88\n2016-06-11 11\t72\n2016-06-11 12\t28\n2016-06-11 13\t98\n2016-06-11 14\t37\n2016-06-11 15\t42\n2016-06-11 16\t57\n2016-06-11 17\t32\n2016-06-12 09\t6\n2016-06-12 10\t18\n2016-06-12 11\t50\n2016-06-12 12\t69\n2016-06-13 09\t57\n2016-06-13 10\t42\n2016-06-13 11\t3\n2016-06-13 14\t9\n2016-06-13 15\t51\n2016-06-13 16\t21\n2016-06-13 17\t9\n2016-06-14 09\t15\n2016-06-14 11\t96\n2016-06-14 13\t50\n2016-06-14 14\t18\n2016-06-14 15\t30\n2016-06-14 16\t3\n2016-06-14 17\t12\n2016-06-15 09\t98\n2016-06-15 10\t119\n2016-06-15 14\t20\n2016-06-15 15\t16\n2016-06-15 16\t12\n2016-06-16 09\t143\n2016-06-16 12\t25\n2016-06-17 15\t3\n2016-06-17 16\t15\n2016-06-17 17\t9\n2016-06-17 18\t12\n2016-06-20 09\t3\n2016-06-20 10\t45\n2016-06-20 11\t28\n2016-06-20 16\t15\n2016-06-20 17\t12\n2016-06-20 18\t36\n2016-06-21 09\t15\n2016-06-21 10\t57\n2016-06-21 11\t6\n2016-06-21 15\t50\n2016-06-21 17\t21\n2016-06-22 08\t6\n2016-06-22 15\t27\n2016-06-22 16\t156\n2016-06-22 17\t48\n2016-06-22 18\t12\n2016-06-23 10\t68\n2016-06-23 11\t21\n2016-06-23 12\t6\n2016-06-23 13\t36\n2016-06-23 15\t6\n2016-06-23 16\t9\n2016-06-23 17\t33\n2016-06-23 18\t15\n2016-06-24 10\t12\n2016-06-27 13\t12\n2016-06-28 11\t3\n2016-06-28 15\t58\n2016-06-29 10\t52\n2016-06-29 11\t39\n2016-06-29 12\t3\n2016-06-30 09\t15\n2016-06-30 10\t9\n2016-06-30 11\t6\n2016-06-30 12\t3\n2016-06-30 13\t39\n2016-06-30 14\t13\n2016-06-30 15\t15\n2016-06-30 16\t22\n2016-07-01 11\t7\n2016-07-01 17\t9\n2016-07-02 09\t24\n2016-07-02 10\t69\n2016-07-02 11\t15\n2016-07-02 16\t6\n2016-07-02 17\t43\n2016-07-03 08\t3\n2016-07-03 09\t125\n2016-07-03 10\t27\n2016-07-03 11\t3\n2016-07-04 12\t6\n2016-07-04 13\t24\n2016-07-04 14\t39\n2016-07-04 15\t24\n2016-07-05 09\t36\n2016-07-05 10\t38\n2016-07-05 11\t177\n2016-07-05 15\t24\n2016-07-05 16\t40\n2016-07-06 10\t18\n2016-07-06 12\t27\n2016-07-06 14\t9\n2016-07-06 15\t47\n2016-07-06 16\t6\n2016-07-29 08\t61\n2016-07-29 09\t91\n2016-07-29 10\t60\n2016-07-29 11\t86\n2016-07-29 12\t60\n2016-07-29 13\t54\n2016-07-29 14\t24\n2016-07-29 15\t29\n2016-07-29 16\t30\n"
+      },
+      "dateCreated": "Oct 28, 2016 1:43:05 AM",
+      "dateStarted": "Oct 28, 2016 2:03:06 AM",
+      "dateFinished": "Oct 28, 2016 2:03:26 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "//ioevent\nval ioeventText \u003d sc.textFile(\"/Users/lynnjiang/Desktop/intern/LB 7-8/ioeventlog/ioevent.csv\")\n\n//case class Ioevent(id : String, iotypeid : String, eventno : String, descr : String, level : Integer, eventtype : String)\ncase class Ioevent(id : String, eventno : Integer, descr : String)\n\nval ioevent \u003d ioeventText.map(s\u003d\u003es.split(\";\")).filter(s\u003d\u003es(0)!\u003d\"id\").map(\n    \n    s \u003d\u003e Ioevent(s(0).replaceAll(\"\\\"\",\"\"),//id\n                 //s(1).replaceAll(\"\\\"\",\"\"),//iotypeid\n                 s(2).toInt,//eventno\n                 s(3).replaceAll(\"\\\"\",\"\")//descr\n                 //s(4).toInt,//level\n                 //s(6).replaceAll(\"\\\"\",\"\")//eventtype\n    ) \n).toDF()\n\nioevent.registerTempTable(\"ioevent\")\n//left join ioeventlog where ioevent.eventno \u003d ioeventlog.eventno",
+      "dateUpdated": "Nov 17, 2016 10:25:04 AM",
+      "config": {
+        "colWidth": 3.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "editorHide": true,
+        "tableHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1477361796417_-1224252314",
+      "id": "20161025-101636_846954778",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\nioeventText: org.apache.spark.rdd.RDD[String] \u003d /Users/lynnjiang/Desktop/intern/LB 7-8/ioeventlog/ioevent.csv MapPartitionsRDD[20] at textFile at \u003cconsole\u003e:28\n\ndefined class Ioevent\n\nioevent: org.apache.spark.sql.DataFrame \u003d [id: string, eventno: int ... 1 more field]\n\nwarning: there was one deprecation warning; re-run with -deprecation for details\n"
+      },
+      "dateCreated": "Oct 25, 2016 10:16:36 AM",
+      "dateStarted": "Nov 17, 2016 10:25:05 AM",
+      "dateFinished": "Nov 17, 2016 10:25:07 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "//iotype\nval iotypeText \u003d sc.textFile(\"/Users/lynnjiang/Desktop/intern/LB 7-8/ioeventlog/iotype.csv\")\n\n\ncase class Iotype(id : String, iotypeno : Integer, descr : String)\n\nval iotype \u003d iotypeText.map(s\u003d\u003es.split(\";\")).filter(s\u003d\u003es(0)!\u003d\"id\").map(\n    \n    s \u003d\u003e Iotype(s(0).replaceAll(\"\\\"\",\"\"),//id\n                 s(1).toInt,//iotypeno\n                 s(2).replaceAll(\"\\\"\",\"\")//descr\n    ) \n).toDF()\n\niotype.registerTempTable(\"iotype\")",
+      "dateUpdated": "Nov 17, 2016 10:25:06 AM",
+      "config": {
+        "colWidth": 3.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "editorHide": true,
+        "tableHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1477465293258_-1812586890",
+      "id": "20161026-150133_823179195",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\niotypeText: org.apache.spark.rdd.RDD[String] \u003d /Users/lynnjiang/Desktop/intern/LB 7-8/ioeventlog/iotype.csv MapPartitionsRDD[27] at textFile at \u003cconsole\u003e:28\n\ndefined class Iotype\n\niotype: org.apache.spark.sql.DataFrame \u003d [id: string, iotypeno: int ... 1 more field]\n\nwarning: there was one deprecation warning; re-run with -deprecation for details\n"
+      },
+      "dateCreated": "Oct 26, 2016 3:01:33 AM",
+      "dateStarted": "Nov 17, 2016 10:25:06 AM",
+      "dateFinished": "Nov 17, 2016 10:25:09 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "//Machine\nval machineText \u003d sc.textFile(\"/Users/lynnjiang/Desktop/intern/LB 7-8/ioeventlog/machine.csv\")\n\ncase class Machine(id : String, machinetypeid : String, address : String, pid : String, name : String)\n\nval machine \u003d machineText.map(s\u003d\u003es.split(\";\")).filter(s\u003d\u003es(0)!\u003d\"id\").map(\n    \n    s \u003d\u003e Machine(s(0).replaceAll(\"\\\"\",\"\"),//id\n                 s(2).replaceAll(\"\\\"\",\"\"),//machinetypeid\n                 s(4).replaceAll(\"\\\"\",\"\"),//address\n                 s(5).replaceAll(\"\\\"\",\"\"),//pid\n                 s(6).replaceAll(\"\\\"\",\"\")//name\n    ) \n).toDF()\n\nmachine.registerTempTable(\"machine\")",
+      "dateUpdated": "Nov 17, 2016 10:25:07 AM",
+      "config": {
+        "colWidth": 3.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "editorHide": true,
+        "tableHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1477465647980_-919130425",
+      "id": "20161026-150727_862089220",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\nmachineText: org.apache.spark.rdd.RDD[String] \u003d /Users/lynnjiang/Desktop/intern/LB 7-8/ioeventlog/machine.csv MapPartitionsRDD[34] at textFile at \u003cconsole\u003e:28\n\ndefined class Machine\n\nmachine: org.apache.spark.sql.DataFrame \u003d [id: string, machinetypeid: string ... 3 more fields]\n\nwarning: there was one deprecation warning; re-run with -deprecation for details\n"
+      },
+      "dateCreated": "Oct 26, 2016 3:07:27 AM",
+      "dateStarted": "Nov 17, 2016 10:25:08 AM",
+      "dateFinished": "Nov 17, 2016 10:25:11 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "//Machinetype\nval machinetypeText \u003d sc.textFile(\"/Users/lynnjiang/Desktop/intern/LB 7-8/ioeventlog/machinetype.csv\")\n\ncase class Machinetype(id : String, name : String, desc : String)\n\nval machinetype \u003d machinetypeText.map(s\u003d\u003es.split(\";\")).filter(s\u003d\u003es(0)!\u003d\"id\").map(\n    \n    s \u003d\u003e Machinetype(s(0).replaceAll(\"\\\"\",\"\"),//id\n                 s(1).replaceAll(\"\\\"\",\"\"),//name\n                 s(3).replaceAll(\"\\\"\",\"\")//desc\n    ) \n).toDF()\n\nmachinetype.registerTempTable(\"machinetype\")",
+      "dateUpdated": "Nov 17, 2016 10:25:09 AM",
+      "config": {
+        "colWidth": 3.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "editorHide": true,
+        "tableHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1477467281411_108851285",
+      "id": "20161026-153441_1296526989",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\nmachinetypeText: org.apache.spark.rdd.RDD[String] \u003d /Users/lynnjiang/Desktop/intern/LB 7-8/ioeventlog/machinetype.csv MapPartitionsRDD[41] at textFile at \u003cconsole\u003e:28\n\ndefined class Machinetype\n\nmachinetype: org.apache.spark.sql.DataFrame \u003d [id: string, name: string ... 1 more field]\n\nwarning: there was one deprecation warning; re-run with -deprecation for details\n"
+      },
+      "dateCreated": "Oct 26, 2016 3:34:41 AM",
+      "dateStarted": "Nov 17, 2016 10:25:10 AM",
+      "dateFinished": "Nov 17, 2016 10:25:13 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select * from ioevent",
+      "dateUpdated": "Nov 4, 2016 1:29:31 AM",
+      "config": {
+        "colWidth": 3.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql",
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1477467883817_-86129919",
+      "id": "20161026-154443_763465831",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "id\teventno\tdescr\n8E2CF656-EBEA-E311-9407-3C970E3F32A1\t1\t主板复位\n8F2CF656-EBEA-E311-9407-3C970E3F32A1\t2\t主板离线\n902CF656-EBEA-E311-9407-3C970E3F32A1\t3\t主板连线\n912CF656-EBEA-E311-9407-3C970E3F32A1\t4\t刷卡开电梯\n922CF656-EBEA-E311-9407-3C970E3F32A1\t13\t刷电梯非法卡\n932CF656-EBEA-E311-9407-3C970E3F32A1\t97\t洗衣灯亮\n942CF656-EBEA-E311-9407-3C970E3F32A1\t98\t洗衣灯灭\n952CF656-EBEA-E311-9407-3C970E3F32A1\t100\tSOS报警\n962CF656-EBEA-E311-9407-3C970E3F32A1\t101\t清理灯亮\n972CF656-EBEA-E311-9407-3C970E3F32A1\t102\t清理灯灭\n982CF656-EBEA-E311-9407-3C970E3F32A1\t103\t勿扰灯亮\n992CF656-EBEA-E311-9407-3C970E3F32A1\t104\t勿扰灯灭\n9A2CF656-EBEA-E311-9407-3C970E3F32A1\t57\t写序列号\n9B2CF656-EBEA-E311-9407-3C970E3F32A1\t58\t恢复持卡人指针错误\n9C2CF656-EBEA-E311-9407-3C970E3F32A1\t59\t恢复持卡人指针成功\n9D2CF656-EBEA-E311-9407-3C970E3F32A1\t60\t写硬件版本号\n9E2CF656-EBEA-E311-9407-3C970E3F32A1\t4\t刷卡开门\nA02CF656-EBEA-E311-9407-3C970E3F32A1\t12\t门非法打开\nA12CF656-EBEA-E311-9407-3C970E3F32A1\t6\t按钮开门\nA22CF656-EBEA-E311-9407-3C970E3F32A1\t2\t首卡开门\nA32CF656-EBEA-E311-9407-3C970E3F32A1\t11\t未关门告警\nA42CF656-EBEA-E311-9407-3C970E3F32A1\t1\t门正常打开\nA52CF656-EBEA-E311-9407-3C970E3F32A1\t3\t控制中心开门\nA62CF656-EBEA-E311-9407-3C970E3F32A1\t5\t密码开门\nA72CF656-EBEA-E311-9407-3C970E3F32A1\t7\t门关闭\nA82CF656-EBEA-E311-9407-3C970E3F32A1\t8\t关门(常开门未上锁)\nA92CF656-EBEA-E311-9407-3C970E3F32A1\t9\t关门(上锁延时)\nAA2CF656-EBEA-E311-9407-3C970E3F32A1\t10\t关门上锁\nAF2CF656-EBEA-E311-9407-3C970E3F32A1\t22\t刷卡布防失败\nB02CF656-EBEA-E311-9407-3C970E3F32A1\t23\t安全级别已设置\nB12CF656-EBEA-E311-9407-3C970E3F32A1\t24\t出门按钮短路\nB22CF656-EBEA-E311-9407-3C970E3F32A1\t25\t出门按钮开路\nB32CF656-EBEA-E311-9407-3C970E3F32A1\t26\t门磁短路\nB42CF656-EBEA-E311-9407-3C970E3F32A1\t27\t门磁开路\nB52CF656-EBEA-E311-9407-3C970E3F32A1\t28\tNULL\nB62CF656-EBEA-E311-9407-3C970E3F32A1\t29\tNULL\nB72CF656-EBEA-E311-9407-3C970E3F32A1\t30\t未到上锁时间\nB82CF656-EBEA-E311-9407-3C970E3F32A1\t31\t密码错误，开门无效\nB92CF656-EBEA-E311-9407-3C970E3F32A1\t32\t挂失卡，刷卡无效\nBE2CF656-EBEA-E311-9407-3C970E3F32A1\t37\t考勤开门\nBF2CF656-EBEA-E311-9407-3C970E3F32A1\t38\t门模式错误\nC02CF656-EBEA-E311-9407-3C970E3F32A1\t39\t取消安全级别\nC12CF656-EBEA-E311-9407-3C970E3F32A1\t40\t卡片未启用\nC22CF656-EBEA-E311-9407-3C970E3F32A1\t41\t请求中央开门\nC32CF656-EBEA-E311-9407-3C970E3F32A1\t42\t胁迫开门\nC52CF656-EBEA-E311-9407-3C970E3F32A1\t47\t联动开门\nC62CF656-EBEA-E311-9407-3C970E3F32A1\t48\t联动关门\nD02CF656-EBEA-E311-9407-3C970E3F32A1\t2\t首卡开门\nD12CF656-EBEA-E311-9407-3C970E3F32A1\t4\t刷卡开门\nD22CF656-EBEA-E311-9407-3C970E3F32A1\t5\t密码开门\nD32CF656-EBEA-E311-9407-3C970E3F32A1\t13\t非法卡，刷卡无效\nD42CF656-EBEA-E311-9407-3C970E3F32A1\t14\t门常闭，刷卡无效\nD52CF656-EBEA-E311-9407-3C970E3F32A1\t15\t门常开，密码开门无效\nD62CF656-EBEA-E311-9407-3C970E3F32A1\t16\t未授权，刷卡无效\nD72CF656-EBEA-E311-9407-3C970E3F32A1\t17\t安全级别限制，刷卡无效\nD82CF656-EBEA-E311-9407-3C970E3F32A1\t18\t禁行时段，刷卡无效\nD92CF656-EBEA-E311-9407-3C970E3F32A1\t19\t临时卡失效\nDA2CF656-EBEA-E311-9407-3C970E3F32A1\t20\t刷卡布防\nDB2CF656-EBEA-E311-9407-3C970E3F32A1\t21\t刷卡布防成功\nDC2CF656-EBEA-E311-9407-3C970E3F32A1\t22\t刷卡布防失败\nDD2CF656-EBEA-E311-9407-3C970E3F32A1\t23\t安全级别已设置\nDE2CF656-EBEA-E311-9407-3C970E3F32A1\t31\t密码错误，开门无效\nDF2CF656-EBEA-E311-9407-3C970E3F32A1\t32\t挂失卡，刷卡无效\nE02CF656-EBEA-E311-9407-3C970E3F32A1\t33\t卡模式，密码开门无效\nE12CF656-EBEA-E311-9407-3C970E3F32A1\t34\t密码模式，刷卡无效\nE22CF656-EBEA-E311-9407-3C970E3F32A1\t35\t卡与密码开门\nE32CF656-EBEA-E311-9407-3C970E3F32A1\t36\t常开门设置成功\nE42CF656-EBEA-E311-9407-3C970E3F32A1\t37\t考勤开门\nE52CF656-EBEA-E311-9407-3C970E3F32A1\t38\t门模式错误\nE62CF656-EBEA-E311-9407-3C970E3F32A1\t39\t取消安全级别\nE72CF656-EBEA-E311-9407-3C970E3F32A1\t41\t请求中央开门\nE82CF656-EBEA-E311-9407-3C970E3F32A1\t42\t胁迫开门\nE92CF656-EBEA-E311-9407-3C970E3F32A1\t43\t胁迫出门\nEA2CF656-EBEA-E311-9407-3C970E3F32A1\t44\t互锁门，不能开门\nEB2CF656-EBEA-E311-9407-3C970E3F32A1\t45\t卡与密码开门无效\nEC2CF656-EBEA-E311-9407-3C970E3F32A1\t46\t读头异常\nEE2CF656-EBEA-E311-9407-3C970E3F32A1\t3\t开路\nEF2CF656-EBEA-E311-9407-3C970E3F32A1\t4\t短路\nF02CF656-EBEA-E311-9407-3C970E3F32A1\t1\t闭合\nF12CF656-EBEA-E311-9407-3C970E3F32A1\t2\t释放\nF22CF656-EBEA-E311-9407-3C970E3F32A1\t5\t短按\nF32CF656-EBEA-E311-9407-3C970E3F32A1\t6\t长按\nF42CF656-EBEA-E311-9407-3C970E3F32A1\t1\t闭合\nF52CF656-EBEA-E311-9407-3C970E3F32A1\t2\t释放\nF62CF656-EBEA-E311-9407-3C970E3F32A1\t5\t长按\nF72CF656-EBEA-E311-9407-3C970E3F32A1\t6\t短按\nF82CF656-EBEA-E311-9407-3C970E3F32A1\t1\t闭合\nF92CF656-EBEA-E311-9407-3C970E3F32A1\t2\t释放\nFA2CF656-EBEA-E311-9407-3C970E3F32A1\t3\t剪线报警\nFB2CF656-EBEA-E311-9407-3C970E3F32A1\t4\t短路报警\nFC2CF656-EBEA-E311-9407-3C970E3F32A1\t1\t闭合\nFD2CF656-EBEA-E311-9407-3C970E3F32A1\t2\t释放\nFE2CF656-EBEA-E311-9407-3C970E3F32A1\t3\t剪线报警\nFF2CF656-EBEA-E311-9407-3C970E3F32A1\t4\t短路报警\n002DF656-EBEA-E311-9407-3C970E3F32A1\t1\t门开\n012DF656-EBEA-E311-9407-3C970E3F32A1\t2\t门关\n022DF656-EBEA-E311-9407-3C970E3F32A1\t10\t锁定\n032DF656-EBEA-E311-9407-3C970E3F32A1\t11\t锁定解除\n042DF656-EBEA-E311-9407-3C970E3F32A1\t1\t闭合\n052DF656-EBEA-E311-9407-3C970E3F32A1\t2\t释放\n062DF656-EBEA-E311-9407-3C970E3F32A1\t3\t开关\n072DF656-EBEA-E311-9407-3C970E3F32A1\t4\t反向开关\n082DF656-EBEA-E311-9407-3C970E3F32A1\t5\t动作持续\n092DF656-EBEA-E311-9407-3C970E3F32A1\t0\t回路关\n0A2DF656-EBEA-E311-9407-3C970E3F32A1\t255\t回路开\n0B2DF656-EBEA-E311-9407-3C970E3F32A1\t3\t布防\n0C2DF656-EBEA-E311-9407-3C970E3F32A1\t4\t撤防\n0D2DF656-EBEA-E311-9407-3C970E3F32A1\t1\t报警\n0E2DF656-EBEA-E311-9407-3C970E3F32A1\t2\t解除报警\n0F2DF656-EBEA-E311-9407-3C970E3F32A1\t1\t数值变化\n102DF656-EBEA-E311-9407-3C970E3F32A1\t1\t数值变化\n112DF656-EBEA-E311-9407-3C970E3F32A1\t1\t数值变化\n122DF656-EBEA-E311-9407-3C970E3F32A1\t2\t插卡\n132DF656-EBEA-E311-9407-3C970E3F32A1\t3\t取卡\n142DF656-EBEA-E311-9407-3C970E3F32A1\t4\t取卡延时\n152DF656-EBEA-E311-9407-3C970E3F32A1\t1\t数值变化\n162DF656-EBEA-E311-9407-3C970E3F32A1\t2\t插卡\n172DF656-EBEA-E311-9407-3C970E3F32A1\t3\t取卡\n182DF656-EBEA-E311-9407-3C970E3F32A1\t4\t取卡延时\n192DF656-EBEA-E311-9407-3C970E3F32A1\t1\t数值变化\n1A2DF656-EBEA-E311-9407-3C970E3F32A1\t2\t插卡\n1B2DF656-EBEA-E311-9407-3C970E3F32A1\t3\t取卡\n1C2DF656-EBEA-E311-9407-3C970E3F32A1\t4\t取卡延时\n1D2DF656-EBEA-E311-9407-3C970E3F32A1\t1\t数值变化\n1E2DF656-EBEA-E311-9407-3C970E3F32A1\t2\t插卡\n1F2DF656-EBEA-E311-9407-3C970E3F32A1\t3\t取卡\n202DF656-EBEA-E311-9407-3C970E3F32A1\t4\t取卡延时\n212DF656-EBEA-E311-9407-3C970E3F32A1\t1\t闭合\n222DF656-EBEA-E311-9407-3C970E3F32A1\t2\t释放\n232DF656-EBEA-E311-9407-3C970E3F32A1\t3\t开关\n242DF656-EBEA-E311-9407-3C970E3F32A1\t4\t反向开关\n252DF656-EBEA-E311-9407-3C970E3F32A1\t5\t动作持续\n262DF656-EBEA-E311-9407-3C970E3F32A1\t0\tDALI灯关\n272DF656-EBEA-E311-9407-3C970E3F32A1\t1\tDALI灯开亮度1\n282DF656-EBEA-E311-9407-3C970E3F32A1\t2\tDALI灯开亮度2\n292DF656-EBEA-E311-9407-3C970E3F32A1\t3\tDALI灯开亮度3\n2A2DF656-EBEA-E311-9407-3C970E3F32A1\t4\tDALI灯开亮度4\n2B2DF656-EBEA-E311-9407-3C970E3F32A1\t5\tDALI灯开亮度5\n2C2DF656-EBEA-E311-9407-3C970E3F32A1\t6\tDALI灯开亮度6\n2D2DF656-EBEA-E311-9407-3C970E3F32A1\t7\tDALI灯开亮度7\n2E2DF656-EBEA-E311-9407-3C970E3F32A1\t8\tDALI灯开亮度8\n2F2DF656-EBEA-E311-9407-3C970E3F32A1\t9\tDALI灯开亮度9\n302DF656-EBEA-E311-9407-3C970E3F32A1\t10\tDALI灯开亮度10\n312DF656-EBEA-E311-9407-3C970E3F32A1\t11\tDALI灯开亮度11\n322DF656-EBEA-E311-9407-3C970E3F32A1\t12\tDALI灯开亮度12\n332DF656-EBEA-E311-9407-3C970E3F32A1\t13\tDALI灯开亮度13\n342DF656-EBEA-E311-9407-3C970E3F32A1\t14\tDALI灯开亮度14\n352DF656-EBEA-E311-9407-3C970E3F32A1\t15\tDALI灯开亮度15\n362DF656-EBEA-E311-9407-3C970E3F32A1\t16\tDALI灯开亮度16\n372DF656-EBEA-E311-9407-3C970E3F32A1\t17\tDALI灯开亮度17\n382DF656-EBEA-E311-9407-3C970E3F32A1\t18\tDALI灯开亮度18\n392DF656-EBEA-E311-9407-3C970E3F32A1\t19\tDALI灯开亮度19\n3A2DF656-EBEA-E311-9407-3C970E3F32A1\t20\tDALI灯开亮度20\n3B2DF656-EBEA-E311-9407-3C970E3F32A1\t21\tDALI灯开亮度21\n3C2DF656-EBEA-E311-9407-3C970E3F32A1\t22\tDALI灯开亮度22\n3D2DF656-EBEA-E311-9407-3C970E3F32A1\t23\tDALI灯开亮度23\n3E2DF656-EBEA-E311-9407-3C970E3F32A1\t24\tDALI灯开亮度24\n3F2DF656-EBEA-E311-9407-3C970E3F32A1\t25\tDALI灯开亮度25\n402DF656-EBEA-E311-9407-3C970E3F32A1\t26\tDALI灯开亮度26\n412DF656-EBEA-E311-9407-3C970E3F32A1\t27\tDALI灯开亮度27\n422DF656-EBEA-E311-9407-3C970E3F32A1\t28\tDALI灯开亮度28\n432DF656-EBEA-E311-9407-3C970E3F32A1\t29\tDALI灯开亮度29\n442DF656-EBEA-E311-9407-3C970E3F32A1\t30\tDALI灯开亮度30\n452DF656-EBEA-E311-9407-3C970E3F32A1\t31\tDALI灯开亮度31\n462DF656-EBEA-E311-9407-3C970E3F32A1\t32\tDALI灯开亮度32\n472DF656-EBEA-E311-9407-3C970E3F32A1\t33\tDALI灯开亮度33\n482DF656-EBEA-E311-9407-3C970E3F32A1\t34\tDALI灯开亮度34\n492DF656-EBEA-E311-9407-3C970E3F32A1\t35\tDALI灯开亮度35\n4A2DF656-EBEA-E311-9407-3C970E3F32A1\t36\tDALI灯开亮度36\n4B2DF656-EBEA-E311-9407-3C970E3F32A1\t37\tDALI灯开亮度37\n4C2DF656-EBEA-E311-9407-3C970E3F32A1\t38\tDALI灯开亮度38\n4D2DF656-EBEA-E311-9407-3C970E3F32A1\t39\tDALI灯开亮度39\n4E2DF656-EBEA-E311-9407-3C970E3F32A1\t40\tDALI灯开亮度40\n4F2DF656-EBEA-E311-9407-3C970E3F32A1\t41\tDALI灯开亮度41\n502DF656-EBEA-E311-9407-3C970E3F32A1\t42\tDALI灯开亮度42\n512DF656-EBEA-E311-9407-3C970E3F32A1\t43\tDALI灯开亮度43\n522DF656-EBEA-E311-9407-3C970E3F32A1\t44\tDALI灯开亮度44\n532DF656-EBEA-E311-9407-3C970E3F32A1\t45\tDALI灯开亮度45\n542DF656-EBEA-E311-9407-3C970E3F32A1\t46\tDALI灯开亮度46\n552DF656-EBEA-E311-9407-3C970E3F32A1\t47\tDALI灯开亮度47\n562DF656-EBEA-E311-9407-3C970E3F32A1\t48\tDALI灯开亮度48\n572DF656-EBEA-E311-9407-3C970E3F32A1\t49\tDALI灯开亮度49\n582DF656-EBEA-E311-9407-3C970E3F32A1\t50\tDALI灯开亮度50\n592DF656-EBEA-E311-9407-3C970E3F32A1\t51\tDALI灯开亮度51\n5A2DF656-EBEA-E311-9407-3C970E3F32A1\t52\tDALI灯开亮度52\n5B2DF656-EBEA-E311-9407-3C970E3F32A1\t53\tDALI灯开亮度53\n5C2DF656-EBEA-E311-9407-3C970E3F32A1\t54\tDALI灯开亮度54\n5D2DF656-EBEA-E311-9407-3C970E3F32A1\t55\tDALI灯开亮度55\n5E2DF656-EBEA-E311-9407-3C970E3F32A1\t56\tDALI灯开亮度56\n5F2DF656-EBEA-E311-9407-3C970E3F32A1\t57\tDALI灯开亮度57\n602DF656-EBEA-E311-9407-3C970E3F32A1\t58\tDALI灯开亮度58\n612DF656-EBEA-E311-9407-3C970E3F32A1\t59\tDALI灯开亮度59\n622DF656-EBEA-E311-9407-3C970E3F32A1\t60\tDALI灯开亮度60\n632DF656-EBEA-E311-9407-3C970E3F32A1\t61\tDALI灯开亮度61\n642DF656-EBEA-E311-9407-3C970E3F32A1\t62\tDALI灯开亮度62\n652DF656-EBEA-E311-9407-3C970E3F32A1\t63\tDALI灯开亮度63\n662DF656-EBEA-E311-9407-3C970E3F32A1\t64\tDALI灯开亮度64\n672DF656-EBEA-E311-9407-3C970E3F32A1\t65\tDALI灯开亮度65\n682DF656-EBEA-E311-9407-3C970E3F32A1\t66\tDALI灯开亮度66\n692DF656-EBEA-E311-9407-3C970E3F32A1\t67\tDALI灯开亮度67\n6A2DF656-EBEA-E311-9407-3C970E3F32A1\t68\tDALI灯开亮度68\n6B2DF656-EBEA-E311-9407-3C970E3F32A1\t69\tDALI灯开亮度69\n6C2DF656-EBEA-E311-9407-3C970E3F32A1\t70\tDALI灯开亮度70\n6D2DF656-EBEA-E311-9407-3C970E3F32A1\t71\tDALI灯开亮度71\n6E2DF656-EBEA-E311-9407-3C970E3F32A1\t72\tDALI灯开亮度72\n6F2DF656-EBEA-E311-9407-3C970E3F32A1\t73\tDALI灯开亮度73\n702DF656-EBEA-E311-9407-3C970E3F32A1\t74\tDALI灯开亮度74\n712DF656-EBEA-E311-9407-3C970E3F32A1\t75\tDALI灯开亮度75\n722DF656-EBEA-E311-9407-3C970E3F32A1\t76\tDALI灯开亮度76\n732DF656-EBEA-E311-9407-3C970E3F32A1\t77\tDALI灯开亮度77\n742DF656-EBEA-E311-9407-3C970E3F32A1\t78\tDALI灯开亮度78\n752DF656-EBEA-E311-9407-3C970E3F32A1\t79\tDALI灯开亮度79\n762DF656-EBEA-E311-9407-3C970E3F32A1\t80\tDALI灯开亮度80\n772DF656-EBEA-E311-9407-3C970E3F32A1\t81\tDALI灯开亮度81\n782DF656-EBEA-E311-9407-3C970E3F32A1\t82\tDALI灯开亮度82\n792DF656-EBEA-E311-9407-3C970E3F32A1\t83\tDALI灯开亮度83\n7A2DF656-EBEA-E311-9407-3C970E3F32A1\t84\tDALI灯开亮度84\n7B2DF656-EBEA-E311-9407-3C970E3F32A1\t85\tDALI灯开亮度85\n7C2DF656-EBEA-E311-9407-3C970E3F32A1\t86\tDALI灯开亮度86\n7D2DF656-EBEA-E311-9407-3C970E3F32A1\t87\tDALI灯开亮度87\n7E2DF656-EBEA-E311-9407-3C970E3F32A1\t88\tDALI灯开亮度88\n7F2DF656-EBEA-E311-9407-3C970E3F32A1\t89\tDALI灯开亮度89\n802DF656-EBEA-E311-9407-3C970E3F32A1\t90\tDALI灯开亮度90\n812DF656-EBEA-E311-9407-3C970E3F32A1\t91\tDALI灯开亮度91\n822DF656-EBEA-E311-9407-3C970E3F32A1\t92\tDALI灯开亮度92\n832DF656-EBEA-E311-9407-3C970E3F32A1\t93\tDALI灯开亮度93\n842DF656-EBEA-E311-9407-3C970E3F32A1\t94\tDALI灯开亮度94\n852DF656-EBEA-E311-9407-3C970E3F32A1\t95\tDALI灯开亮度95\n862DF656-EBEA-E311-9407-3C970E3F32A1\t96\tDALI灯开亮度96\n872DF656-EBEA-E311-9407-3C970E3F32A1\t97\tDALI灯开亮度97\n882DF656-EBEA-E311-9407-3C970E3F32A1\t98\tDALI灯开亮度98\n892DF656-EBEA-E311-9407-3C970E3F32A1\t99\tDALI灯开亮度99\n8A2DF656-EBEA-E311-9407-3C970E3F32A1\t100\tDALI灯开亮度100\n8B2DF656-EBEA-E311-9407-3C970E3F32A1\t101\tDALI灯开亮度101\n8C2DF656-EBEA-E311-9407-3C970E3F32A1\t102\tDALI灯开亮度102\n8D2DF656-EBEA-E311-9407-3C970E3F32A1\t103\tDALI灯开亮度103\n8E2DF656-EBEA-E311-9407-3C970E3F32A1\t104\tDALI灯开亮度104\n8F2DF656-EBEA-E311-9407-3C970E3F32A1\t105\tDALI灯开亮度105\n902DF656-EBEA-E311-9407-3C970E3F32A1\t106\tDALI灯开亮度106\n912DF656-EBEA-E311-9407-3C970E3F32A1\t107\tDALI灯开亮度107\n922DF656-EBEA-E311-9407-3C970E3F32A1\t108\tDALI灯开亮度108\n932DF656-EBEA-E311-9407-3C970E3F32A1\t109\tDALI灯开亮度109\n942DF656-EBEA-E311-9407-3C970E3F32A1\t110\tDALI灯开亮度110\n952DF656-EBEA-E311-9407-3C970E3F32A1\t111\tDALI灯开亮度111\n962DF656-EBEA-E311-9407-3C970E3F32A1\t112\tDALI灯开亮度112\n972DF656-EBEA-E311-9407-3C970E3F32A1\t113\tDALI灯开亮度113\n982DF656-EBEA-E311-9407-3C970E3F32A1\t114\tDALI灯开亮度114\n992DF656-EBEA-E311-9407-3C970E3F32A1\t115\tDALI灯开亮度115\n9A2DF656-EBEA-E311-9407-3C970E3F32A1\t116\tDALI灯开亮度116\n9B2DF656-EBEA-E311-9407-3C970E3F32A1\t117\tDALI灯开亮度117\n9C2DF656-EBEA-E311-9407-3C970E3F32A1\t118\tDALI灯开亮度118\n9D2DF656-EBEA-E311-9407-3C970E3F32A1\t119\tDALI灯开亮度119\n9E2DF656-EBEA-E311-9407-3C970E3F32A1\t120\tDALI灯开亮度120\n9F2DF656-EBEA-E311-9407-3C970E3F32A1\t121\tDALI灯开亮度121\nA02DF656-EBEA-E311-9407-3C970E3F32A1\t122\tDALI灯开亮度122\nA12DF656-EBEA-E311-9407-3C970E3F32A1\t123\tDALI灯开亮度123\nA22DF656-EBEA-E311-9407-3C970E3F32A1\t124\tDALI灯开亮度124\nA32DF656-EBEA-E311-9407-3C970E3F32A1\t125\tDALI灯开亮度125\nA42DF656-EBEA-E311-9407-3C970E3F32A1\t126\tDALI灯开亮度126\nA52DF656-EBEA-E311-9407-3C970E3F32A1\t127\tDALI灯开亮度127\nA62DF656-EBEA-E311-9407-3C970E3F32A1\t128\tDALI灯开亮度128\nA72DF656-EBEA-E311-9407-3C970E3F32A1\t129\tDALI灯开亮度129\nA82DF656-EBEA-E311-9407-3C970E3F32A1\t130\tDALI灯开亮度130\nA92DF656-EBEA-E311-9407-3C970E3F32A1\t131\tDALI灯开亮度131\nAA2DF656-EBEA-E311-9407-3C970E3F32A1\t132\tDALI灯开亮度132\nAB2DF656-EBEA-E311-9407-3C970E3F32A1\t133\tDALI灯开亮度133\nAC2DF656-EBEA-E311-9407-3C970E3F32A1\t134\tDALI灯开亮度134\nAD2DF656-EBEA-E311-9407-3C970E3F32A1\t135\tDALI灯开亮度135\nAE2DF656-EBEA-E311-9407-3C970E3F32A1\t136\tDALI灯开亮度136\nAF2DF656-EBEA-E311-9407-3C970E3F32A1\t137\tDALI灯开亮度137\nB02DF656-EBEA-E311-9407-3C970E3F32A1\t138\tDALI灯开亮度138\nB12DF656-EBEA-E311-9407-3C970E3F32A1\t139\tDALI灯开亮度139\nB22DF656-EBEA-E311-9407-3C970E3F32A1\t140\tDALI灯开亮度140\nB32DF656-EBEA-E311-9407-3C970E3F32A1\t141\tDALI灯开亮度141\nB42DF656-EBEA-E311-9407-3C970E3F32A1\t142\tDALI灯开亮度142\nB52DF656-EBEA-E311-9407-3C970E3F32A1\t143\tDALI灯开亮度143\nB62DF656-EBEA-E311-9407-3C970E3F32A1\t144\tDALI灯开亮度144\nB72DF656-EBEA-E311-9407-3C970E3F32A1\t145\tDALI灯开亮度145\nB82DF656-EBEA-E311-9407-3C970E3F32A1\t146\tDALI灯开亮度146\nB92DF656-EBEA-E311-9407-3C970E3F32A1\t147\tDALI灯开亮度147\nBA2DF656-EBEA-E311-9407-3C970E3F32A1\t148\tDALI灯开亮度148\nBB2DF656-EBEA-E311-9407-3C970E3F32A1\t149\tDALI灯开亮度149\nBC2DF656-EBEA-E311-9407-3C970E3F32A1\t150\tDALI灯开亮度150\nBD2DF656-EBEA-E311-9407-3C970E3F32A1\t151\tDALI灯开亮度151\nBE2DF656-EBEA-E311-9407-3C970E3F32A1\t152\tDALI灯开亮度152\nBF2DF656-EBEA-E311-9407-3C970E3F32A1\t153\tDALI灯开亮度153\nC02DF656-EBEA-E311-9407-3C970E3F32A1\t154\tDALI灯开亮度154\nC12DF656-EBEA-E311-9407-3C970E3F32A1\t155\tDALI灯开亮度155\nC22DF656-EBEA-E311-9407-3C970E3F32A1\t156\tDALI灯开亮度156\nC32DF656-EBEA-E311-9407-3C970E3F32A1\t157\tDALI灯开亮度157\nC42DF656-EBEA-E311-9407-3C970E3F32A1\t158\tDALI灯开亮度158\nC52DF656-EBEA-E311-9407-3C970E3F32A1\t159\tDALI灯开亮度159\nC62DF656-EBEA-E311-9407-3C970E3F32A1\t160\tDALI灯开亮度160\nC72DF656-EBEA-E311-9407-3C970E3F32A1\t161\tDALI灯开亮度161\nC82DF656-EBEA-E311-9407-3C970E3F32A1\t162\tDALI灯开亮度162\nC92DF656-EBEA-E311-9407-3C970E3F32A1\t163\tDALI灯开亮度163\nCA2DF656-EBEA-E311-9407-3C970E3F32A1\t164\tDALI灯开亮度164\nCB2DF656-EBEA-E311-9407-3C970E3F32A1\t165\tDALI灯开亮度165\nCC2DF656-EBEA-E311-9407-3C970E3F32A1\t166\tDALI灯开亮度166\nCD2DF656-EBEA-E311-9407-3C970E3F32A1\t167\tDALI灯开亮度167\nCE2DF656-EBEA-E311-9407-3C970E3F32A1\t168\tDALI灯开亮度168\nCF2DF656-EBEA-E311-9407-3C970E3F32A1\t169\tDALI灯开亮度169\nD02DF656-EBEA-E311-9407-3C970E3F32A1\t170\tDALI灯开亮度170\nD12DF656-EBEA-E311-9407-3C970E3F32A1\t171\tDALI灯开亮度171\nD22DF656-EBEA-E311-9407-3C970E3F32A1\t172\tDALI灯开亮度172\nD32DF656-EBEA-E311-9407-3C970E3F32A1\t173\tDALI灯开亮度173\nD42DF656-EBEA-E311-9407-3C970E3F32A1\t174\tDALI灯开亮度174\nD52DF656-EBEA-E311-9407-3C970E3F32A1\t175\tDALI灯开亮度175\nD62DF656-EBEA-E311-9407-3C970E3F32A1\t176\tDALI灯开亮度176\nD72DF656-EBEA-E311-9407-3C970E3F32A1\t177\tDALI灯开亮度177\nD82DF656-EBEA-E311-9407-3C970E3F32A1\t178\tDALI灯开亮度178\nD92DF656-EBEA-E311-9407-3C970E3F32A1\t179\tDALI灯开亮度179\nDA2DF656-EBEA-E311-9407-3C970E3F32A1\t180\tDALI灯开亮度180\nDB2DF656-EBEA-E311-9407-3C970E3F32A1\t181\tDALI灯开亮度181\nDC2DF656-EBEA-E311-9407-3C970E3F32A1\t182\tDALI灯开亮度182\nDD2DF656-EBEA-E311-9407-3C970E3F32A1\t183\tDALI灯开亮度183\nDE2DF656-EBEA-E311-9407-3C970E3F32A1\t184\tDALI灯开亮度184\nDF2DF656-EBEA-E311-9407-3C970E3F32A1\t185\tDALI灯开亮度185\nE02DF656-EBEA-E311-9407-3C970E3F32A1\t186\tDALI灯开亮度186\nE12DF656-EBEA-E311-9407-3C970E3F32A1\t187\tDALI灯开亮度187\nE22DF656-EBEA-E311-9407-3C970E3F32A1\t188\tDALI灯开亮度188\nE32DF656-EBEA-E311-9407-3C970E3F32A1\t189\tDALI灯开亮度189\nE42DF656-EBEA-E311-9407-3C970E3F32A1\t190\tDALI灯开亮度190\nE52DF656-EBEA-E311-9407-3C970E3F32A1\t191\tDALI灯开亮度191\nE62DF656-EBEA-E311-9407-3C970E3F32A1\t192\tDALI灯开亮度192\nE72DF656-EBEA-E311-9407-3C970E3F32A1\t193\tDALI灯开亮度193\nE82DF656-EBEA-E311-9407-3C970E3F32A1\t194\tDALI灯开亮度194\nE92DF656-EBEA-E311-9407-3C970E3F32A1\t195\tDALI灯开亮度195\nEA2DF656-EBEA-E311-9407-3C970E3F32A1\t196\tDALI灯开亮度196\nEB2DF656-EBEA-E311-9407-3C970E3F32A1\t197\tDALI灯开亮度197\nEC2DF656-EBEA-E311-9407-3C970E3F32A1\t198\tDALI灯开亮度198\nED2DF656-EBEA-E311-9407-3C970E3F32A1\t199\tDALI灯开亮度199\nEE2DF656-EBEA-E311-9407-3C970E3F32A1\t200\tDALI灯开亮度200\nEF2DF656-EBEA-E311-9407-3C970E3F32A1\t201\tDALI灯开亮度201\nF02DF656-EBEA-E311-9407-3C970E3F32A1\t202\tDALI灯开亮度202\nF12DF656-EBEA-E311-9407-3C970E3F32A1\t203\tDALI灯开亮度203\nF22DF656-EBEA-E311-9407-3C970E3F32A1\t204\tDALI灯开亮度204\nF32DF656-EBEA-E311-9407-3C970E3F32A1\t205\tDALI灯开亮度205\nF42DF656-EBEA-E311-9407-3C970E3F32A1\t206\tDALI灯开亮度206\nF52DF656-EBEA-E311-9407-3C970E3F32A1\t207\tDALI灯开亮度207\nF62DF656-EBEA-E311-9407-3C970E3F32A1\t208\tDALI灯开亮度208\nF72DF656-EBEA-E311-9407-3C970E3F32A1\t209\tDALI灯开亮度209\nF82DF656-EBEA-E311-9407-3C970E3F32A1\t210\tDALI灯开亮度210\nF92DF656-EBEA-E311-9407-3C970E3F32A1\t211\tDALI灯开亮度211\nFA2DF656-EBEA-E311-9407-3C970E3F32A1\t212\tDALI灯开亮度212\nFB2DF656-EBEA-E311-9407-3C970E3F32A1\t213\tDALI灯开亮度213\nFC2DF656-EBEA-E311-9407-3C970E3F32A1\t214\tDALI灯开亮度214\nFD2DF656-EBEA-E311-9407-3C970E3F32A1\t215\tDALI灯开亮度215\nFE2DF656-EBEA-E311-9407-3C970E3F32A1\t216\tDALI灯开亮度216\nFF2DF656-EBEA-E311-9407-3C970E3F32A1\t217\tDALI灯开亮度217\n002EF656-EBEA-E311-9407-3C970E3F32A1\t218\tDALI灯开亮度218\n012EF656-EBEA-E311-9407-3C970E3F32A1\t219\tDALI灯开亮度219\n022EF656-EBEA-E311-9407-3C970E3F32A1\t220\tDALI灯开亮度220\n032EF656-EBEA-E311-9407-3C970E3F32A1\t221\tDALI灯开亮度221\n042EF656-EBEA-E311-9407-3C970E3F32A1\t222\tDALI灯开亮度222\n052EF656-EBEA-E311-9407-3C970E3F32A1\t223\tDALI灯开亮度223\n062EF656-EBEA-E311-9407-3C970E3F32A1\t224\tDALI灯开亮度224\n072EF656-EBEA-E311-9407-3C970E3F32A1\t225\tDALI灯开亮度225\n082EF656-EBEA-E311-9407-3C970E3F32A1\t226\tDALI灯开亮度226\n092EF656-EBEA-E311-9407-3C970E3F32A1\t227\tDALI灯开亮度227\n0A2EF656-EBEA-E311-9407-3C970E3F32A1\t228\tDALI灯开亮度228\n0B2EF656-EBEA-E311-9407-3C970E3F32A1\t229\tDALI灯开亮度229\n0C2EF656-EBEA-E311-9407-3C970E3F32A1\t230\tDALI灯开亮度230\n0D2EF656-EBEA-E311-9407-3C970E3F32A1\t231\tDALI灯开亮度231\n0E2EF656-EBEA-E311-9407-3C970E3F32A1\t232\tDALI灯开亮度232\n0F2EF656-EBEA-E311-9407-3C970E3F32A1\t233\tDALI灯开亮度233\n102EF656-EBEA-E311-9407-3C970E3F32A1\t234\tDALI灯开亮度234\n112EF656-EBEA-E311-9407-3C970E3F32A1\t235\tDALI灯开亮度235\n122EF656-EBEA-E311-9407-3C970E3F32A1\t236\tDALI灯开亮度236\n132EF656-EBEA-E311-9407-3C970E3F32A1\t237\tDALI灯开亮度237\n142EF656-EBEA-E311-9407-3C970E3F32A1\t238\tDALI灯开亮度238\n152EF656-EBEA-E311-9407-3C970E3F32A1\t239\tDALI灯开亮度239\n162EF656-EBEA-E311-9407-3C970E3F32A1\t240\tDALI灯开亮度240\n172EF656-EBEA-E311-9407-3C970E3F32A1\t241\tDALI灯开亮度241\n182EF656-EBEA-E311-9407-3C970E3F32A1\t242\tDALI灯开亮度242\n192EF656-EBEA-E311-9407-3C970E3F32A1\t243\tDALI灯开亮度243\n1A2EF656-EBEA-E311-9407-3C970E3F32A1\t244\tDALI灯开亮度244\n1B2EF656-EBEA-E311-9407-3C970E3F32A1\t245\tDALI灯开亮度245\n1C2EF656-EBEA-E311-9407-3C970E3F32A1\t246\tDALI灯开亮度246\n1D2EF656-EBEA-E311-9407-3C970E3F32A1\t247\tDALI灯开亮度247\n1E2EF656-EBEA-E311-9407-3C970E3F32A1\t248\tDALI灯开亮度248\n1F2EF656-EBEA-E311-9407-3C970E3F32A1\t249\tDALI灯开亮度249\n202EF656-EBEA-E311-9407-3C970E3F32A1\t250\tDALI灯开亮度250\n212EF656-EBEA-E311-9407-3C970E3F32A1\t251\tDALI灯开亮度251\n222EF656-EBEA-E311-9407-3C970E3F32A1\t252\tDALI灯开亮度252\n232EF656-EBEA-E311-9407-3C970E3F32A1\t253\tDALI灯开亮度253\n242EF656-EBEA-E311-9407-3C970E3F32A1\t254\tDALI灯开亮度254\n252EF656-EBEA-E311-9407-3C970E3F32A1\t255\tDALI灯开\n262EF656-EBEA-E311-9407-3C970E3F32A1\t11\t滑条动作\n790202AE-EBEA-E311-9407-3C970E3F32A1\t2\t请求超时\n7A0202AE-EBEA-E311-9407-3C970E3F32A1\t3\t应答错误\n7B0202AE-EBEA-E311-9407-3C970E3F32A1\t8\t旁路\n800AA316-DAEB-E311-A351-3C970E3F32A1\t0\tDALI组关\n810AA316-DAEB-E311-A351-3C970E3F32A1\t1\tDALI组调亮度1\n820AA316-DAEB-E311-A351-3C970E3F32A1\t2\tDALI组调亮度2\n830AA316-DAEB-E311-A351-3C970E3F32A1\t3\tDALI组调亮度3\n840AA316-DAEB-E311-A351-3C970E3F32A1\t4\tDALI组调亮度4\n850AA316-DAEB-E311-A351-3C970E3F32A1\t5\tDALI组调亮度5\n860AA316-DAEB-E311-A351-3C970E3F32A1\t6\tDALI组调亮度6\n870AA316-DAEB-E311-A351-3C970E3F32A1\t7\tDALI组调亮度7\n880AA316-DAEB-E311-A351-3C970E3F32A1\t8\tDALI组调亮度8\n890AA316-DAEB-E311-A351-3C970E3F32A1\t9\tDALI组调亮度9\n8A0AA316-DAEB-E311-A351-3C970E3F32A1\t10\tDALI组调亮度10\n8B0AA316-DAEB-E311-A351-3C970E3F32A1\t11\tDALI组调亮度11\n8C0AA316-DAEB-E311-A351-3C970E3F32A1\t12\tDALI组调亮度12\n8D0AA316-DAEB-E311-A351-3C970E3F32A1\t13\tDALI组调亮度13\n8E0AA316-DAEB-E311-A351-3C970E3F32A1\t14\tDALI组调亮度14\n8F0AA316-DAEB-E311-A351-3C970E3F32A1\t15\tDALI组调亮度15\n900AA316-DAEB-E311-A351-3C970E3F32A1\t16\tDALI组调亮度16\n910AA316-DAEB-E311-A351-3C970E3F32A1\t17\tDALI组调亮度17\n920AA316-DAEB-E311-A351-3C970E3F32A1\t18\tDALI组调亮度18\n930AA316-DAEB-E311-A351-3C970E3F32A1\t19\tDALI组调亮度19\n940AA316-DAEB-E311-A351-3C970E3F32A1\t20\tDALI组调亮度20\n950AA316-DAEB-E311-A351-3C970E3F32A1\t21\tDALI组调亮度21\n960AA316-DAEB-E311-A351-3C970E3F32A1\t22\tDALI组调亮度22\n970AA316-DAEB-E311-A351-3C970E3F32A1\t23\tDALI组调亮度23\n980AA316-DAEB-E311-A351-3C970E3F32A1\t24\tDALI组调亮度24\n990AA316-DAEB-E311-A351-3C970E3F32A1\t25\tDALI组调亮度25\n9A0AA316-DAEB-E311-A351-3C970E3F32A1\t26\tDALI组调亮度26\n9B0AA316-DAEB-E311-A351-3C970E3F32A1\t27\tDALI组调亮度27\n9C0AA316-DAEB-E311-A351-3C970E3F32A1\t28\tDALI组调亮度28\n9D0AA316-DAEB-E311-A351-3C970E3F32A1\t29\tDALI组调亮度29\n9E0AA316-DAEB-E311-A351-3C970E3F32A1\t30\tDALI组调亮度30\n9F0AA316-DAEB-E311-A351-3C970E3F32A1\t31\tDALI组调亮度31\nA00AA316-DAEB-E311-A351-3C970E3F32A1\t32\tDALI组调亮度32\nA10AA316-DAEB-E311-A351-3C970E3F32A1\t33\tDALI组调亮度33\nA20AA316-DAEB-E311-A351-3C970E3F32A1\t34\tDALI组调亮度34\nA30AA316-DAEB-E311-A351-3C970E3F32A1\t35\tDALI组调亮度35\nA40AA316-DAEB-E311-A351-3C970E3F32A1\t36\tDALI组调亮度36\nA50AA316-DAEB-E311-A351-3C970E3F32A1\t37\tDALI组调亮度37\nA60AA316-DAEB-E311-A351-3C970E3F32A1\t38\tDALI组调亮度38\nA70AA316-DAEB-E311-A351-3C970E3F32A1\t39\tDALI组调亮度39\nA80AA316-DAEB-E311-A351-3C970E3F32A1\t40\tDALI组调亮度40\nA90AA316-DAEB-E311-A351-3C970E3F32A1\t41\tDALI组调亮度41\nAA0AA316-DAEB-E311-A351-3C970E3F32A1\t42\tDALI组调亮度42\nAB0AA316-DAEB-E311-A351-3C970E3F32A1\t43\tDALI组调亮度43\nAC0AA316-DAEB-E311-A351-3C970E3F32A1\t44\tDALI组调亮度44\nAD0AA316-DAEB-E311-A351-3C970E3F32A1\t45\tDALI组调亮度45\nAE0AA316-DAEB-E311-A351-3C970E3F32A1\t46\tDALI组调亮度46\nAF0AA316-DAEB-E311-A351-3C970E3F32A1\t47\tDALI组调亮度47\nB00AA316-DAEB-E311-A351-3C970E3F32A1\t48\tDALI组调亮度48\nB10AA316-DAEB-E311-A351-3C970E3F32A1\t49\tDALI组调亮度49\nB20AA316-DAEB-E311-A351-3C970E3F32A1\t50\tDALI组调亮度50\nB30AA316-DAEB-E311-A351-3C970E3F32A1\t51\tDALI组调亮度51\nB40AA316-DAEB-E311-A351-3C970E3F32A1\t52\tDALI组调亮度52\nB50AA316-DAEB-E311-A351-3C970E3F32A1\t53\tDALI组调亮度53\nB60AA316-DAEB-E311-A351-3C970E3F32A1\t54\tDALI组调亮度54\nB70AA316-DAEB-E311-A351-3C970E3F32A1\t55\tDALI组调亮度55\nB80AA316-DAEB-E311-A351-3C970E3F32A1\t56\tDALI组调亮度56\nB90AA316-DAEB-E311-A351-3C970E3F32A1\t57\tDALI组调亮度57\nBA0AA316-DAEB-E311-A351-3C970E3F32A1\t58\tDALI组调亮度58\nBB0AA316-DAEB-E311-A351-3C970E3F32A1\t59\tDALI组调亮度59\nBC0AA316-DAEB-E311-A351-3C970E3F32A1\t60\tDALI组调亮度60\nBD0AA316-DAEB-E311-A351-3C970E3F32A1\t61\tDALI组调亮度61\nBE0AA316-DAEB-E311-A351-3C970E3F32A1\t62\tDALI组调亮度62\nBF0AA316-DAEB-E311-A351-3C970E3F32A1\t63\tDALI组调亮度63\nC00AA316-DAEB-E311-A351-3C970E3F32A1\t64\tDALI组调亮度64\nC10AA316-DAEB-E311-A351-3C970E3F32A1\t65\tDALI组调亮度65\nC20AA316-DAEB-E311-A351-3C970E3F32A1\t66\tDALI组调亮度66\nC30AA316-DAEB-E311-A351-3C970E3F32A1\t67\tDALI组调亮度67\nC40AA316-DAEB-E311-A351-3C970E3F32A1\t68\tDALI组调亮度68\nC50AA316-DAEB-E311-A351-3C970E3F32A1\t69\tDALI组调亮度69\nC60AA316-DAEB-E311-A351-3C970E3F32A1\t70\tDALI组调亮度70\nC70AA316-DAEB-E311-A351-3C970E3F32A1\t71\tDALI组调亮度71\nC80AA316-DAEB-E311-A351-3C970E3F32A1\t72\tDALI组调亮度72\nC90AA316-DAEB-E311-A351-3C970E3F32A1\t73\tDALI组调亮度73\nCA0AA316-DAEB-E311-A351-3C970E3F32A1\t74\tDALI组调亮度74\nCB0AA316-DAEB-E311-A351-3C970E3F32A1\t75\tDALI组调亮度75\nCC0AA316-DAEB-E311-A351-3C970E3F32A1\t76\tDALI组调亮度76\nCD0AA316-DAEB-E311-A351-3C970E3F32A1\t77\tDALI组调亮度77\nCE0AA316-DAEB-E311-A351-3C970E3F32A1\t78\tDALI组调亮度78\nCF0AA316-DAEB-E311-A351-3C970E3F32A1\t79\tDALI组调亮度79\nD00AA316-DAEB-E311-A351-3C970E3F32A1\t80\tDALI组调亮度80\nD10AA316-DAEB-E311-A351-3C970E3F32A1\t81\tDALI组调亮度81\nD20AA316-DAEB-E311-A351-3C970E3F32A1\t82\tDALI组调亮度82\nD30AA316-DAEB-E311-A351-3C970E3F32A1\t83\tDALI组调亮度83\nD40AA316-DAEB-E311-A351-3C970E3F32A1\t84\tDALI组调亮度84\nD50AA316-DAEB-E311-A351-3C970E3F32A1\t85\tDALI组调亮度85\nD60AA316-DAEB-E311-A351-3C970E3F32A1\t86\tDALI组调亮度86\nD70AA316-DAEB-E311-A351-3C970E3F32A1\t87\tDALI组调亮度87\nD80AA316-DAEB-E311-A351-3C970E3F32A1\t88\tDALI组调亮度88\nD90AA316-DAEB-E311-A351-3C970E3F32A1\t89\tDALI组调亮度89\nDA0AA316-DAEB-E311-A351-3C970E3F32A1\t90\tDALI组调亮度90\nDB0AA316-DAEB-E311-A351-3C970E3F32A1\t91\tDALI组调亮度91\nDC0AA316-DAEB-E311-A351-3C970E3F32A1\t92\tDALI组调亮度92\nDD0AA316-DAEB-E311-A351-3C970E3F32A1\t93\tDALI组调亮度93\nDE0AA316-DAEB-E311-A351-3C970E3F32A1\t94\tDALI组调亮度94\nDF0AA316-DAEB-E311-A351-3C970E3F32A1\t95\tDALI组调亮度95\nE00AA316-DAEB-E311-A351-3C970E3F32A1\t96\tDALI组调亮度96\nE10AA316-DAEB-E311-A351-3C970E3F32A1\t97\tDALI组调亮度97\nE20AA316-DAEB-E311-A351-3C970E3F32A1\t98\tDALI组调亮度98\nE30AA316-DAEB-E311-A351-3C970E3F32A1\t99\tDALI组调亮度99\nE40AA316-DAEB-E311-A351-3C970E3F32A1\t100\tDALI组调亮度100\nE50AA316-DAEB-E311-A351-3C970E3F32A1\t101\tDALI组调亮度101\nE60AA316-DAEB-E311-A351-3C970E3F32A1\t102\tDALI组调亮度102\nE70AA316-DAEB-E311-A351-3C970E3F32A1\t103\tDALI组调亮度103\nE80AA316-DAEB-E311-A351-3C970E3F32A1\t104\tDALI组调亮度104\nE90AA316-DAEB-E311-A351-3C970E3F32A1\t105\tDALI组调亮度105\nEA0AA316-DAEB-E311-A351-3C970E3F32A1\t106\tDALI组调亮度106\nEB0AA316-DAEB-E311-A351-3C970E3F32A1\t107\tDALI组调亮度107\nEC0AA316-DAEB-E311-A351-3C970E3F32A1\t108\tDALI组调亮度108\nED0AA316-DAEB-E311-A351-3C970E3F32A1\t109\tDALI组调亮度109\nEE0AA316-DAEB-E311-A351-3C970E3F32A1\t110\tDALI组调亮度110\nEF0AA316-DAEB-E311-A351-3C970E3F32A1\t111\tDALI组调亮度111\nF00AA316-DAEB-E311-A351-3C970E3F32A1\t112\tDALI组调亮度112\nF10AA316-DAEB-E311-A351-3C970E3F32A1\t113\tDALI组调亮度113\nF20AA316-DAEB-E311-A351-3C970E3F32A1\t114\tDALI组调亮度114\nF30AA316-DAEB-E311-A351-3C970E3F32A1\t115\tDALI组调亮度115\nF40AA316-DAEB-E311-A351-3C970E3F32A1\t116\tDALI组调亮度116\nF50AA316-DAEB-E311-A351-3C970E3F32A1\t117\tDALI组调亮度117\nF60AA316-DAEB-E311-A351-3C970E3F32A1\t118\tDALI组调亮度118\nF70AA316-DAEB-E311-A351-3C970E3F32A1\t119\tDALI组调亮度119\nF80AA316-DAEB-E311-A351-3C970E3F32A1\t120\tDALI组调亮度120\nF90AA316-DAEB-E311-A351-3C970E3F32A1\t121\tDALI组调亮度121\nFA0AA316-DAEB-E311-A351-3C970E3F32A1\t122\tDALI组调亮度122\nFB0AA316-DAEB-E311-A351-3C970E3F32A1\t123\tDALI组调亮度123\nFC0AA316-DAEB-E311-A351-3C970E3F32A1\t124\tDALI组调亮度124\nFD0AA316-DAEB-E311-A351-3C970E3F32A1\t125\tDALI组调亮度125\nFE0AA316-DAEB-E311-A351-3C970E3F32A1\t126\tDALI组调亮度126\nFF0AA316-DAEB-E311-A351-3C970E3F32A1\t127\tDALI组调亮度127\n000BA316-DAEB-E311-A351-3C970E3F32A1\t128\tDALI组调亮度128\n010BA316-DAEB-E311-A351-3C970E3F32A1\t129\tDALI组调亮度129\n020BA316-DAEB-E311-A351-3C970E3F32A1\t130\tDALI组调亮度130\n030BA316-DAEB-E311-A351-3C970E3F32A1\t131\tDALI组调亮度131\n040BA316-DAEB-E311-A351-3C970E3F32A1\t132\tDALI组调亮度132\n050BA316-DAEB-E311-A351-3C970E3F32A1\t133\tDALI组调亮度133\n060BA316-DAEB-E311-A351-3C970E3F32A1\t134\tDALI组调亮度134\n070BA316-DAEB-E311-A351-3C970E3F32A1\t135\tDALI组调亮度135\n080BA316-DAEB-E311-A351-3C970E3F32A1\t136\tDALI组调亮度136\n090BA316-DAEB-E311-A351-3C970E3F32A1\t137\tDALI组调亮度137\n0A0BA316-DAEB-E311-A351-3C970E3F32A1\t138\tDALI组调亮度138\n0B0BA316-DAEB-E311-A351-3C970E3F32A1\t139\tDALI组调亮度139\n0C0BA316-DAEB-E311-A351-3C970E3F32A1\t140\tDALI组调亮度140\n0D0BA316-DAEB-E311-A351-3C970E3F32A1\t141\tDALI组调亮度141\n0E0BA316-DAEB-E311-A351-3C970E3F32A1\t142\tDALI组调亮度142\n0F0BA316-DAEB-E311-A351-3C970E3F32A1\t143\tDALI组调亮度143\n100BA316-DAEB-E311-A351-3C970E3F32A1\t144\tDALI组调亮度144\n110BA316-DAEB-E311-A351-3C970E3F32A1\t145\tDALI组调亮度145\n120BA316-DAEB-E311-A351-3C970E3F32A1\t146\tDALI组调亮度146\n130BA316-DAEB-E311-A351-3C970E3F32A1\t147\tDALI组调亮度147\n140BA316-DAEB-E311-A351-3C970E3F32A1\t148\tDALI组调亮度148\n150BA316-DAEB-E311-A351-3C970E3F32A1\t149\tDALI组调亮度149\n160BA316-DAEB-E311-A351-3C970E3F32A1\t150\tDALI组调亮度150\n170BA316-DAEB-E311-A351-3C970E3F32A1\t151\tDALI组调亮度151\n180BA316-DAEB-E311-A351-3C970E3F32A1\t152\tDALI组调亮度152\n190BA316-DAEB-E311-A351-3C970E3F32A1\t153\tDALI组调亮度153\n1A0BA316-DAEB-E311-A351-3C970E3F32A1\t154\tDALI组调亮度154\n1B0BA316-DAEB-E311-A351-3C970E3F32A1\t155\tDALI组调亮度155\n1C0BA316-DAEB-E311-A351-3C970E3F32A1\t156\tDALI组调亮度156\n1D0BA316-DAEB-E311-A351-3C970E3F32A1\t157\tDALI组调亮度157\n1E0BA316-DAEB-E311-A351-3C970E3F32A1\t158\tDALI组调亮度158\n1F0BA316-DAEB-E311-A351-3C970E3F32A1\t159\tDALI组调亮度159\n200BA316-DAEB-E311-A351-3C970E3F32A1\t160\tDALI组调亮度160\n210BA316-DAEB-E311-A351-3C970E3F32A1\t161\tDALI组调亮度161\n220BA316-DAEB-E311-A351-3C970E3F32A1\t162\tDALI组调亮度162\n230BA316-DAEB-E311-A351-3C970E3F32A1\t163\tDALI组调亮度163\n240BA316-DAEB-E311-A351-3C970E3F32A1\t164\tDALI组调亮度164\n250BA316-DAEB-E311-A351-3C970E3F32A1\t165\tDALI组调亮度165\n260BA316-DAEB-E311-A351-3C970E3F32A1\t166\tDALI组调亮度166\n270BA316-DAEB-E311-A351-3C970E3F32A1\t167\tDALI组调亮度167\n280BA316-DAEB-E311-A351-3C970E3F32A1\t168\tDALI组调亮度168\n290BA316-DAEB-E311-A351-3C970E3F32A1\t169\tDALI组调亮度169\n2A0BA316-DAEB-E311-A351-3C970E3F32A1\t170\tDALI组调亮度170\n2B0BA316-DAEB-E311-A351-3C970E3F32A1\t171\tDALI组调亮度171\n2C0BA316-DAEB-E311-A351-3C970E3F32A1\t172\tDALI组调亮度172\n2D0BA316-DAEB-E311-A351-3C970E3F32A1\t173\tDALI组调亮度173\n2E0BA316-DAEB-E311-A351-3C970E3F32A1\t174\tDALI组调亮度174\n2F0BA316-DAEB-E311-A351-3C970E3F32A1\t175\tDALI组调亮度175\n300BA316-DAEB-E311-A351-3C970E3F32A1\t176\tDALI组调亮度176\n310BA316-DAEB-E311-A351-3C970E3F32A1\t177\tDALI组调亮度177\n320BA316-DAEB-E311-A351-3C970E3F32A1\t178\tDALI组调亮度178\n330BA316-DAEB-E311-A351-3C970E3F32A1\t179\tDALI组调亮度179\n340BA316-DAEB-E311-A351-3C970E3F32A1\t180\tDALI组调亮度180\n350BA316-DAEB-E311-A351-3C970E3F32A1\t181\tDALI组调亮度181\n360BA316-DAEB-E311-A351-3C970E3F32A1\t182\tDALI组调亮度182\n370BA316-DAEB-E311-A351-3C970E3F32A1\t183\tDALI组调亮度183\n380BA316-DAEB-E311-A351-3C970E3F32A1\t184\tDALI组调亮度184\n390BA316-DAEB-E311-A351-3C970E3F32A1\t185\tDALI组调亮度185\n3A0BA316-DAEB-E311-A351-3C970E3F32A1\t186\tDALI组调亮度186\n3B0BA316-DAEB-E311-A351-3C970E3F32A1\t187\tDALI组调亮度187\n3C0BA316-DAEB-E311-A351-3C970E3F32A1\t188\tDALI组调亮度188\n3D0BA316-DAEB-E311-A351-3C970E3F32A1\t189\tDALI组调亮度189\n3E0BA316-DAEB-E311-A351-3C970E3F32A1\t190\tDALI组调亮度190\n3F0BA316-DAEB-E311-A351-3C970E3F32A1\t191\tDALI组调亮度191\n400BA316-DAEB-E311-A351-3C970E3F32A1\t192\tDALI组调亮度192\n410BA316-DAEB-E311-A351-3C970E3F32A1\t193\tDALI组调亮度193\n420BA316-DAEB-E311-A351-3C970E3F32A1\t194\tDALI组调亮度194\n430BA316-DAEB-E311-A351-3C970E3F32A1\t195\tDALI组调亮度195\n440BA316-DAEB-E311-A351-3C970E3F32A1\t196\tDALI组调亮度196\n450BA316-DAEB-E311-A351-3C970E3F32A1\t197\tDALI组调亮度197\n460BA316-DAEB-E311-A351-3C970E3F32A1\t198\tDALI组调亮度198\n470BA316-DAEB-E311-A351-3C970E3F32A1\t199\tDALI组调亮度199\n480BA316-DAEB-E311-A351-3C970E3F32A1\t200\tDALI组调亮度200\n490BA316-DAEB-E311-A351-3C970E3F32A1\t201\tDALI组调亮度201\n4A0BA316-DAEB-E311-A351-3C970E3F32A1\t202\tDALI组调亮度202\n4B0BA316-DAEB-E311-A351-3C970E3F32A1\t203\tDALI组调亮度203\n4C0BA316-DAEB-E311-A351-3C970E3F32A1\t204\tDALI组调亮度204\n4D0BA316-DAEB-E311-A351-3C970E3F32A1\t205\tDALI组调亮度205\n4E0BA316-DAEB-E311-A351-3C970E3F32A1\t206\tDALI组调亮度206\n4F0BA316-DAEB-E311-A351-3C970E3F32A1\t207\tDALI组调亮度207\n500BA316-DAEB-E311-A351-3C970E3F32A1\t208\tDALI组调亮度208\n510BA316-DAEB-E311-A351-3C970E3F32A1\t209\tDALI组调亮度209\n520BA316-DAEB-E311-A351-3C970E3F32A1\t210\tDALI组调亮度210\n530BA316-DAEB-E311-A351-3C970E3F32A1\t211\tDALI组调亮度211\n540BA316-DAEB-E311-A351-3C970E3F32A1\t212\tDALI组调亮度212\n550BA316-DAEB-E311-A351-3C970E3F32A1\t213\tDALI组调亮度213\n560BA316-DAEB-E311-A351-3C970E3F32A1\t214\tDALI组调亮度214\n570BA316-DAEB-E311-A351-3C970E3F32A1\t215\tDALI组调亮度215\n580BA316-DAEB-E311-A351-3C970E3F32A1\t216\tDALI组调亮度216\n590BA316-DAEB-E311-A351-3C970E3F32A1\t217\tDALI组调亮度217\n5A0BA316-DAEB-E311-A351-3C970E3F32A1\t218\tDALI组调亮度218\n5B0BA316-DAEB-E311-A351-3C970E3F32A1\t219\tDALI组调亮度219\n5C0BA316-DAEB-E311-A351-3C970E3F32A1\t220\tDALI组调亮度220\n5D0BA316-DAEB-E311-A351-3C970E3F32A1\t221\tDALI组调亮度221\n5E0BA316-DAEB-E311-A351-3C970E3F32A1\t222\tDALI组调亮度222\n5F0BA316-DAEB-E311-A351-3C970E3F32A1\t223\tDALI组调亮度223\n600BA316-DAEB-E311-A351-3C970E3F32A1\t224\tDALI组调亮度224\n610BA316-DAEB-E311-A351-3C970E3F32A1\t225\tDALI组调亮度225\n620BA316-DAEB-E311-A351-3C970E3F32A1\t226\tDALI组调亮度226\n630BA316-DAEB-E311-A351-3C970E3F32A1\t227\tDALI组调亮度227\n640BA316-DAEB-E311-A351-3C970E3F32A1\t228\tDALI组调亮度228\n650BA316-DAEB-E311-A351-3C970E3F32A1\t229\tDALI组调亮度229\n660BA316-DAEB-E311-A351-3C970E3F32A1\t230\tDALI组调亮度230\n670BA316-DAEB-E311-A351-3C970E3F32A1\t231\tDALI组调亮度231\n680BA316-DAEB-E311-A351-3C970E3F32A1\t232\tDALI组调亮度232\n690BA316-DAEB-E311-A351-3C970E3F32A1\t233\tDALI组调亮度233\n6A0BA316-DAEB-E311-A351-3C970E3F32A1\t234\tDALI组调亮度234\n6B0BA316-DAEB-E311-A351-3C970E3F32A1\t235\tDALI组调亮度235\n6C0BA316-DAEB-E311-A351-3C970E3F32A1\t236\tDALI组调亮度236\n6D0BA316-DAEB-E311-A351-3C970E3F32A1\t237\tDALI组调亮度237\n6E0BA316-DAEB-E311-A351-3C970E3F32A1\t238\tDALI组调亮度238\n6F0BA316-DAEB-E311-A351-3C970E3F32A1\t239\tDALI组调亮度239\n700BA316-DAEB-E311-A351-3C970E3F32A1\t240\tDALI组调亮度240\n710BA316-DAEB-E311-A351-3C970E3F32A1\t241\tDALI组调亮度241\n720BA316-DAEB-E311-A351-3C970E3F32A1\t242\tDALI组调亮度242\n730BA316-DAEB-E311-A351-3C970E3F32A1\t243\tDALI组调亮度243\n740BA316-DAEB-E311-A351-3C970E3F32A1\t244\tDALI组调亮度244\n750BA316-DAEB-E311-A351-3C970E3F32A1\t245\tDALI组调亮度245\n760BA316-DAEB-E311-A351-3C970E3F32A1\t246\tDALI组调亮度246\n770BA316-DAEB-E311-A351-3C970E3F32A1\t247\tDALI组调亮度247\n780BA316-DAEB-E311-A351-3C970E3F32A1\t248\tDALI组调亮度248\n790BA316-DAEB-E311-A351-3C970E3F32A1\t249\tDALI组调亮度249\n7A0BA316-DAEB-E311-A351-3C970E3F32A1\t250\tDALI组调亮度250\n7B0BA316-DAEB-E311-A351-3C970E3F32A1\t251\tDALI组调亮度251\n7C0BA316-DAEB-E311-A351-3C970E3F32A1\t252\tDALI组调亮度252\n7D0BA316-DAEB-E311-A351-3C970E3F32A1\t253\tDALI组调亮度253\n7E0BA316-DAEB-E311-A351-3C970E3F32A1\t254\tDALI组调亮度254\n7F0BA316-DAEB-E311-A351-3C970E3F32A1\t255\tDALI组调亮度255\nB0B4B80E-E918-E411-97DA-442A60F45437\t49\t锁定门\nB1B4B80E-E918-E411-97DA-442A60F45437\t50\t取消锁定门\nB4B4B80E-E918-E411-97DA-442A60F45437\t54\t常开门设置错误\n206FD18E-0D1D-E411-9B6B-804971124CD3\t0\t低于下限\n216FD18E-0D1D-E411-9B6B-804971124CD3\t1\t高于上限\n226FD18E-0D1D-E411-9B6B-804971124CD3\t0\t释放\n236FD18E-0D1D-E411-9B6B-804971124CD3\t1\t闭合\n246FD18E-0D1D-E411-9B6B-804971124CD3\t0\t低于下限\n256FD18E-0D1D-E411-9B6B-804971124CD3\t1\t高于上限\n266FD18E-0D1D-E411-9B6B-804971124CD3\t0\t释放\n276FD18E-0D1D-E411-9B6B-804971124CD3\t1\t闭合\n286FD18E-0D1D-E411-9B6B-804971124CD3\t0\t释放\n296FD18E-0D1D-E411-9B6B-804971124CD3\t1\t闭合\n2A6FD18E-0D1D-E411-9B6B-804971124CD3\t0\t关闭\n2B6FD18E-0D1D-E411-9B6B-804971124CD3\t1\t开启\n9A6AB1A9-D8E3-E411-8DBC-8741D6186923\t255\t节点报警\n796C41E8-1323-E611-87A8-8CDCD43DE504\t1\t清理灯亮\n7A6C41E8-1323-E611-87A8-8CDCD43DE504\t2\t清理灯灭\n7B6C41E8-1323-E611-87A8-8CDCD43DE504\t1\t勿扰灯亮\n7C6C41E8-1323-E611-87A8-8CDCD43DE504\t2\t勿扰灯灭\n7D6C41E8-1323-E611-87A8-8CDCD43DE504\t1\t洗衣灯亮\n7E6C41E8-1323-E611-87A8-8CDCD43DE504\t2\t洗衣灯灭\n7F6C41E8-1323-E611-87A8-8CDCD43DE504\t1\t请稍后灯亮\n806C41E8-1323-E611-87A8-8CDCD43DE504\t2\t请稍后灯灭\n816C41E8-1323-E611-87A8-8CDCD43DE504\t1\tS0S报警\n826C41E8-1323-E611-87A8-8CDCD43DE504\t2\tSOS报警解除\n836C41E8-1323-E611-87A8-8CDCD43DE504\t1\t门磁开\n846C41E8-1323-E611-87A8-8CDCD43DE504\t2\t门磁关\n856C41E8-1323-E611-87A8-8CDCD43DE504\t3\t门磁报警\n866C41E8-1323-E611-87A8-8CDCD43DE504\t1\t数值变化\n876C41E8-1323-E611-87A8-8CDCD43DE504\t1\t数值变化\n896C41E8-1323-E611-87A8-8CDCD43DE504\t1\t数值变化\n8A6C41E8-1323-E611-87A8-8CDCD43DE504\t1\t插卡\n8B6C41E8-1323-E611-87A8-8CDCD43DE504\t2\t取卡\n8C6C41E8-1323-E611-87A8-8CDCD43DE504\t3\t取卡延时\n8D6C41E8-1323-E611-87A8-8CDCD43DE504\t1\t主板复位\n8E6C41E8-1323-E611-87A8-8CDCD43DE504\t2\t主板离线\n8F6C41E8-1323-E611-87A8-8CDCD43DE504\t3\t主板连线\n906C41E8-1323-E611-87A8-8CDCD43DE504\t5\t失效卡删除\n916C41E8-1323-E611-87A8-8CDCD43DE504\t57\t写序列号\n926C41E8-1323-E611-87A8-8CDCD43DE504\t60\t写硬件版本号\n936C41E8-1323-E611-87A8-8CDCD43DE504\t43\t更改房间状态\nCB88D7BD-944D-E611-9564-8CDCD43DE504\t1\t闭合\nCC88D7BD-944D-E611-9564-8CDCD43DE504\t2\t释放\nCD88D7BD-944D-E611-9564-8CDCD43DE504\t3\t开关\nCE88D7BD-944D-E611-9564-8CDCD43DE504\t4\t反向开关\nCF88D7BD-944D-E611-9564-8CDCD43DE504\t5\t动作持续\nD088D7BD-944D-E611-9564-8CDCD43DE504\t0\t回路关\nD188D7BD-944D-E611-9564-8CDCD43DE504\t255\t回路开\nDE88D7BD-944D-E611-9564-8CDCD43DE504\t4\t刷卡授权\nDF88D7BD-944D-E611-9564-8CDCD43DE504\t13\t非法卡\nE088D7BD-944D-E611-9564-8CDCD43DE504\t16\t没有授权\n5A2CD554-954D-E611-9564-8CDCD43DE504\t1\t消防报警\n5B2CD554-954D-E611-9564-8CDCD43DE504\t2\t消防解警\n5D2CD554-954D-E611-9564-8CDCD43DE504\t8\t非法强开门\n6FFD4C9C-53D4-E411-92B3-8E00ACDAAA20\t198\t节点报警\n57661A4E-E46A-E411-A094-AC7F3EE52DF5\t54\t错误的区域，刷卡出门无效\n58661A4E-E46A-E411-A094-AC7F3EE52DF5\t55\t使用胁迫密码出门\n59661A4E-E46A-E411-A094-AC7F3EE52DF5\t62\t首卡开门\n5A661A4E-E46A-E411-A094-AC7F3EE52DF5\t64\t刷卡开门\n5B661A4E-E46A-E411-A094-AC7F3EE52DF5\t65\t密码开门\n5C661A4E-E46A-E411-A094-AC7F3EE52DF5\t73\t非法卡，刷卡无效\n5D661A4E-E46A-E411-A094-AC7F3EE52DF5\t74\t门常闭，刷卡无效\n5E661A4E-E46A-E411-A094-AC7F3EE52DF5\t75\t门常开，不能使用密码开门\n5F661A4E-E46A-E411-A094-AC7F3EE52DF5\t76\t卡片未授权，刷卡无效\n60661A4E-E46A-E411-A094-AC7F3EE52DF5\t77\t安全级别别限制，刷卡无效\n61661A4E-E46A-E411-A094-AC7F3EE52DF5\t78\t禁行时段，刷卡无效\n62661A4E-E46A-E411-A094-AC7F3EE52DF5\t79\t临时卡失效，刷卡无效\n63661A4E-E46A-E411-A094-AC7F3EE52DF5\t80\t刷卡布防\n64661A4E-E46A-E411-A094-AC7F3EE52DF5\t81\t刷卡布防成功\n65661A4E-E46A-E411-A094-AC7F3EE52DF5\t82\t刷卡布防失败\n66661A4E-E46A-E411-A094-AC7F3EE52DF5\t83\t安全级别已设置\n67661A4E-E46A-E411-A094-AC7F3EE52DF5\t90\t关门(未到上锁时间)\n68661A4E-E46A-E411-A094-AC7F3EE52DF5\t91\t密码错误,无法开门\n69661A4E-E46A-E411-A094-AC7F3EE52DF5\t92\t挂失卡开门无效\n6A661A4E-E46A-E411-A094-AC7F3EE52DF5\t93\t卡模式密码开门无效\n6B661A4E-E46A-E411-A094-AC7F3EE52DF5\t94\t密码模式卡开门无效\n6C661A4E-E46A-E411-A094-AC7F3EE52DF5\t95\t卡与密码开门\n6D661A4E-E46A-E411-A094-AC7F3EE52DF5\t97\t考勤开门\n6E661A4E-E46A-E411-A094-AC7F3EE52DF5\t100\t考勤开门\n287D51CA-444F-E411-A670-AC7F3EE52DF5\t1\t主板复位\n297D51CA-444F-E411-A670-AC7F3EE52DF5\t2\t报警控制板离线\n2A7D51CA-444F-E411-A670-AC7F3EE52DF5\t3\t控制板离线\n2B7D51CA-444F-E411-A670-AC7F3EE52DF5\t4\t控制箱被打开\n2C7D51CA-444F-E411-A670-AC7F3EE52DF5\t5\t控制箱被关闭\n2D7D51CA-444F-E411-A670-AC7F3EE52DF5\t10\t剪断线报警\n2E7D51CA-444F-E411-A670-AC7F3EE52DF5\t11\t短路故障报警\n2F7D51CA-444F-E411-A670-AC7F3EE52DF5\t16\t输入点开路\n307D51CA-444F-E411-A670-AC7F3EE52DF5\t17\t输入点短路\n317D51CA-444F-E411-A670-AC7F3EE52DF5\t18\t输入点闭合\n327D51CA-444F-E411-A670-AC7F3EE52DF5\t19\t输入点断开\n337D51CA-444F-E411-A670-AC7F3EE52DF5\t16\t输入点开路\n347D51CA-444F-E411-A670-AC7F3EE52DF5\t17\t输入点短路\n357D51CA-444F-E411-A670-AC7F3EE52DF5\t18\t输入点闭合\n367D51CA-444F-E411-A670-AC7F3EE52DF5\t19\t输入点断开\n377D51CA-444F-E411-A670-AC7F3EE52DF5\t26\t门的工作模式状态改变\n387D51CA-444F-E411-A670-AC7F3EE52DF5\t32\t输出点闭合\n397D51CA-444F-E411-A670-AC7F3EE52DF5\t33\t输出点断开\n3A7D51CA-444F-E411-A670-AC7F3EE52DF5\t35\t未授权的时间段，刷卡进门无效\n3B7D51CA-444F-E411-A670-AC7F3EE52DF5\t36\t错误的卡密码，刷卡进入无效\n3C7D51CA-444F-E411-A670-AC7F3EE52DF5\t37\t跟随进门，刷卡无效\n3D7D51CA-444F-E411-A670-AC7F3EE52DF5\t38\t错误的区域，刷卡进入无效\n3E7D51CA-444F-E411-A670-AC7F3EE52DF5\t39\t使用胁迫密码开门\n3F7D51CA-444F-E411-A670-AC7F3EE52DF5\t48\t防区报警\n407D51CA-444F-E411-A670-AC7F3EE52DF5\t49\t解除报警\n417D51CA-444F-E411-A670-AC7F3EE52DF5\t50\t防区布防\n427D51CA-444F-E411-A670-AC7F3EE52DF5\t51\t防区撤防\n437D51CA-444F-E411-A670-AC7F3EE52DF5\t52\t防区信号线被剪断\n447D51CA-444F-E411-A670-AC7F3EE52DF5\t53\t防区信号线被短路\n457D51CA-444F-E411-A670-AC7F3EE52DF5\t48\t防区报警\n467D51CA-444F-E411-A670-AC7F3EE52DF5\t49\t解除报警\n477D51CA-444F-E411-A670-AC7F3EE52DF5\t50\t防区布防\n487D51CA-444F-E411-A670-AC7F3EE52DF5\t51\t防区撤防\n497D51CA-444F-E411-A670-AC7F3EE52DF5\t52\t防区信号线被剪断\n4A7D51CA-444F-E411-A670-AC7F3EE52DF5\t53\t防区信号线被短路\n4B7D51CA-444F-E411-A670-AC7F3EE52DF5\t54\t错误的区域，刷卡出门无效\n4C7D51CA-444F-E411-A670-AC7F3EE52DF5\t55\t使用胁迫密码出门\n4D7D51CA-444F-E411-A670-AC7F3EE52DF5\t61\t门正常打开\n4E7D51CA-444F-E411-A670-AC7F3EE52DF5\t62\t首卡开门\n4F7D51CA-444F-E411-A670-AC7F3EE52DF5\t63\t控制中心开门\n507D51CA-444F-E411-A670-AC7F3EE52DF5\t64\t刷卡开门\n517D51CA-444F-E411-A670-AC7F3EE52DF5\t65\t密码开门\n527D51CA-444F-E411-A670-AC7F3EE52DF5\t66\t出门按钮开门\n537D51CA-444F-E411-A670-AC7F3EE52DF5\t67\t门正常关闭\n547D51CA-444F-E411-A670-AC7F3EE52DF5\t68\t关门（常开门未上锁）\n557D51CA-444F-E411-A670-AC7F3EE52DF5\t69\t关门（上锁延时）\n567D51CA-444F-E411-A670-AC7F3EE52DF5\t70\t门上锁\n577D51CA-444F-E411-A670-AC7F3EE52DF5\t71\t未关门告警\n587D51CA-444F-E411-A670-AC7F3EE52DF5\t72\t门非法打开\n597D51CA-444F-E411-A670-AC7F3EE52DF5\t73\t非法卡，刷卡无效\n5A7D51CA-444F-E411-A670-AC7F3EE52DF5\t74\t门常闭，刷卡无效\n5B7D51CA-444F-E411-A670-AC7F3EE52DF5\t75\t门常开，不能使用密码开门\n5C7D51CA-444F-E411-A670-AC7F3EE52DF5\t76\t卡片未授权，刷卡无效\n5D7D51CA-444F-E411-A670-AC7F3EE52DF5\t77\t安全级别别限制，刷卡无效\n5E7D51CA-444F-E411-A670-AC7F3EE52DF5\t78\t禁行时段，刷卡无效\n5F7D51CA-444F-E411-A670-AC7F3EE52DF5\t79\t临时卡失效，刷卡无效\n607D51CA-444F-E411-A670-AC7F3EE52DF5\t80\t刷卡布防\n627D51CA-444F-E411-A670-AC7F3EE52DF5\t82\t刷卡布防失败\n647D51CA-444F-E411-A670-AC7F3EE52DF5\t84\t出门按钮短路\n657D51CA-444F-E411-A670-AC7F3EE52DF5\t85\t出门按钮开路\n6D7D51CA-444F-E411-A670-AC7F3EE52DF5\t95\t卡与密码开门\n6E7D51CA-444F-E411-A670-AC7F3EE52DF5\t96\t常开门已设置\n6F7D51CA-444F-E411-A670-AC7F3EE52DF5\t97\t考勤开门\n707D51CA-444F-E411-A670-AC7F3EE52DF5\t98\t门模式错误\n717D51CA-444F-E411-A670-AC7F3EE52DF5\t100\t考勤开门\n4E6D9F56-8ECC-E411-9C32-BFC90ED9F027\t1\t主板复位\n7B6D9F56-8ECC-E411-9C32-BFC90ED9F027\t1\t主板复位\n81AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t12\t门非法打开\n82AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t6\t按钮开门\n84AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t11\t未关门告警\n85AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t1\t门正常打开\n86AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t3\t控制中心开门\n88AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t7\t门关闭\n89AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t8\t关门(常开门未上锁)\n8AAD7CC3-8ECC-E411-9C32-BFC90ED9F027\t9\t关门(上锁延时)\n8BAD7CC3-8ECC-E411-9C32-BFC90ED9F027\t10\t关门上锁\n98AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t30\t未到上锁时间\nA6AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t44\t互锁门，不能开门\nA9AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t47\t联动开门\nAAAD7CC3-8ECC-E411-9C32-BFC90ED9F027\t48\t联动关门\nABAD7CC3-8ECC-E411-9C32-BFC90ED9F027\t2\t首卡开门\nACAD7CC3-8ECC-E411-9C32-BFC90ED9F027\t4\t刷卡开门\nADAD7CC3-8ECC-E411-9C32-BFC90ED9F027\t5\t密码开门\nAEAD7CC3-8ECC-E411-9C32-BFC90ED9F027\t13\t非法卡，刷卡无效\nAFAD7CC3-8ECC-E411-9C32-BFC90ED9F027\t14\t门常闭，刷卡无效\nB0AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t15\t门常开，密码开门无效\nB1AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t16\t未授权，刷卡无效\nB2AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t17\t安全级别限制，刷卡无效\nB3AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t18\t禁行时段，刷卡无效\nB4AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t19\t临时卡失效\nB5AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t20\t刷卡布防\nB6AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t21\t刷卡布防成功\nB7AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t22\t刷卡布防失败\nB8AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t23\t安全级别已设置\nB9AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t31\t密码错误，开门无效\nBAAD7CC3-8ECC-E411-9C32-BFC90ED9F027\t32\t挂失卡，刷卡无效\nBBAD7CC3-8ECC-E411-9C32-BFC90ED9F027\t33\t卡模式，密码开门无效\nBCAD7CC3-8ECC-E411-9C32-BFC90ED9F027\t34\t密码模式，刷卡无效\nBDAD7CC3-8ECC-E411-9C32-BFC90ED9F027\t35\t卡与密码开门\nBEAD7CC3-8ECC-E411-9C32-BFC90ED9F027\t36\t常开门设置成功\nBFAD7CC3-8ECC-E411-9C32-BFC90ED9F027\t37\t考勤开门\nC0AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t38\t门模式错误\nC1AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t39\t取消安全级别\nC2AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t41\t请求中央开门\nC3AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t42\t胁迫开门\nC4AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t43\t胁迫出门\nC5AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t44\t互锁门，不能开门\nC6AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t45\t卡与密码开门无效\nC7AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t46\t读头异常\nC8AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t49\t锁定门\nC9AD7CC3-8ECC-E411-9C32-BFC90ED9F027\t50\t取消锁定门\nCAAD7CC3-8ECC-E411-9C32-BFC90ED9F027\t51\t指纹开门\nCBAD7CC3-8ECC-E411-9C32-BFC90ED9F027\t52\t卡与密码模式下指纹开门无效\nCCAD7CC3-8ECC-E411-9C32-BFC90ED9F027\t53\t门铃\nCDAD7CC3-8ECC-E411-9C32-BFC90ED9F027\t54\t常开门设置错误\nCEAD7CC3-8ECC-E411-9C32-BFC90ED9F027\t55\t非法指纹\nCFAD7CC3-8ECC-E411-9C32-BFC90ED9F027\t56\t当前房门模式下错误开门类型\n5F2247CE-8ECC-E411-9C32-BFC90ED9F027\t1\t上行\n602247CE-8ECC-E411-9C32-BFC90ED9F027\t2\t下行\n612247CE-8ECC-E411-9C32-BFC90ED9F027\t3\t停止\n622247CE-8ECC-E411-9C32-BFC90ED9F027\t4\t开度\n632247CE-8ECC-E411-9C32-BFC90ED9F027\t5\t调光度\n642247CE-8ECC-E411-9C32-BFC90ED9F027\t6\t连续上行\n652247CE-8ECC-E411-9C32-BFC90ED9F027\t7\t连续下行\n662247CE-8ECC-E411-9C32-BFC90ED9F027\t8\t上下调节\n8E558CEE-8ECC-E411-9C32-BFC90ED9F027\t1\t主板复位\n8F558CEE-8ECC-E411-9C32-BFC90ED9F027\t2\t主板离线\n90558CEE-8ECC-E411-9C32-BFC90ED9F027\t3\t主板连线\n91558CEE-8ECC-E411-9C32-BFC90ED9F027\t57\t写序列号\n92558CEE-8ECC-E411-9C32-BFC90ED9F027\t58\t恢复持卡人指针错误\n93558CEE-8ECC-E411-9C32-BFC90ED9F027\t59\t恢复持卡人指针成功\n94558CEE-8ECC-E411-9C32-BFC90ED9F027\t60\t写硬件版本号\nA4558CEE-8ECC-E411-9C32-BFC90ED9F027\t57\t非法拆除\nABD0118A-D47E-E511-A947-FE7C16F2267D\t1\t主板复位\n24EA01ED-D47E-E511-A947-FE7C16F2267D\t24\t出门按钮短路\n25EA01ED-D47E-E511-A947-FE7C16F2267D\t25\t出门按钮开路\n26EA01ED-D47E-E511-A947-FE7C16F2267D\t26\t门磁短路\n27EA01ED-D47E-E511-A947-FE7C16F2267D\t27\t门磁开路\n28EA01ED-D47E-E511-A947-FE7C16F2267D\t40\t卡片未启用\n29EA01ED-D47E-E511-A947-FE7C16F2267D\t86\t门磁短路\n2AEA01ED-D47E-E511-A947-FE7C16F2267D\t87\t门磁开路\nBB30FC2E-D57E-E511-A947-FE7C16F2267D\t4\t数值报警\n84DF9B3F-D57E-E511-A947-FE7C16F2267D\t1\t门正常打开\n85DF9B3F-D57E-E511-A947-FE7C16F2267D\t4\t刷卡开门\n86DF9B3F-D57E-E511-A947-FE7C16F2267D\t7\t门关闭\n87DF9B3F-D57E-E511-A947-FE7C16F2267D\t13\t非法卡,刷卡无效\n88DF9B3F-D57E-E511-A947-FE7C16F2267D\t16\t未授权,刷卡无效\n89DF9B3F-D57E-E511-A947-FE7C16F2267D\t18\t禁行时段,刷卡无效\n8ADF9B3F-D57E-E511-A947-FE7C16F2267D\t47\t联动开门\n"
+      },
+      "dateCreated": "Oct 26, 2016 3:44:43 AM",
+      "dateStarted": "Oct 27, 2016 12:54:09 PM",
+      "dateFinished": "Oct 27, 2016 12:54:09 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select * from iotype",
+      "dateUpdated": "Nov 4, 2016 2:14:11 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1477467886000_760702410",
+      "id": "20161026-154446_1014210383",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "id\tiotypeno\tdescr\n0A455E52-8843-E611-9A57-204747873D4E\t43936\tCLEAR\n0B455E52-8843-E611-9A57-204747873D4E\t43943\tDNOT_DISTURB\n0C455E52-8843-E611-9A57-204747873D4E\t43952\tWASH\n0D455E52-8843-E611-9A57-204747873D4E\t43959\tWAIT\n0E455E52-8843-E611-9A57-204747873D4E\t43968\tCHECKOUT\n0F455E52-8843-E611-9A57-204747873D4E\t43975\tSOS\n10455E52-8843-E611-9A57-204747873D4E\t43984\tDOOR_CONTACT\n11455E52-8843-E611-9A57-204747873D4E\t38\tTMD1_M\n12455E52-8843-E611-9A57-204747873D4E\t39\tTMD2_M\n13455E52-8843-E611-9A57-204747873D4E\t40\tTMD3_M\n14455E52-8843-E611-9A57-204747873D4E\t41\tTMD_N\n15455E52-8843-E611-9A57-204747873D4E\t21862\tS6000-RCMB\nDBAB162E-4712-E411-976E-7427EA38CA2A\t0\tMB\nDCAB162E-4712-E411-976E-7427EA38CA2A\t0\tBALLASTMB\nDDAB162E-4712-E411-976E-7427EA38CA2A\t1\tDI\nDEAB162E-4712-E411-976E-7427EA38CA2A\t2\tDO\nDFAB162E-4712-E411-976E-7427EA38CA2A\t3\tAI\nE0AB162E-4712-E411-976E-7427EA38CA2A\t4\tAO\nE1AB162E-4712-E411-976E-7427EA38CA2A\t5\tDI/R\nE2AB162E-4712-E411-976E-7427EA38CA2A\t6\tAL\nE3AB162E-4712-E411-976E-7427EA38CA2A\t7\tAL/R\nE4AB162E-4712-E411-976E-7427EA38CA2A\t8\tBT\nE5AB162E-4712-E411-976E-7427EA38CA2A\t9\tCT\nE6AB162E-4712-E411-976E-7427EA38CA2A\t10\tDR\nE7AB162E-4712-E411-976E-7427EA38CA2A\t11\tRD\nE8AB162E-4712-E411-976E-7427EA38CA2A\t12\tTMA1\nE9AB162E-4712-E411-976E-7427EA38CA2A\t13\tTMD\nEAAB162E-4712-E411-976E-7427EA38CA2A\t14\tVR\nEBAB162E-4712-E411-976E-7427EA38CA2A\t15\tDL\nECAB162E-4712-E411-976E-7427EA38CA2A\t16\tDL/R\nEDAB162E-4712-E411-976E-7427EA38CA2A\t17\tBT/R\nEEAB162E-4712-E411-976E-7427EA38CA2A\t18\tIR\nEFAB162E-4712-E411-976E-7427EA38CA2A\t19\tAP\nF0AB162E-4712-E411-976E-7427EA38CA2A\t20\tSO\nF1AB162E-4712-E411-976E-7427EA38CA2A\t21\tDAGR\nF2AB162E-4712-E411-976E-7427EA38CA2A\t22\tDASC\nF3AB162E-4712-E411-976E-7427EA38CA2A\t23\tVO\nF4AB162E-4712-E411-976E-7427EA38CA2A\t24\tOUGR\nF5AB162E-4712-E411-976E-7427EA38CA2A\t25\tOUSC\nF6AB162E-4712-E411-976E-7427EA38CA2A\t26\tANGR\nF7AB162E-4712-E411-976E-7427EA38CA2A\t27\tANSC\nF8AB162E-4712-E411-976E-7427EA38CA2A\t28\tLOCK\nF9AB162E-4712-E411-976E-7427EA38CA2A\t29\tTMD1\nFAAB162E-4712-E411-976E-7427EA38CA2A\t30\tTMD2\nFBAB162E-4712-E411-976E-7427EA38CA2A\t31\tTMD3\nFCAB162E-4712-E411-976E-7427EA38CA2A\t32\tVI\nFDAB162E-4712-E411-976E-7427EA38CA2A\t33\tSD\nFEAB162E-4712-E411-976E-7427EA38CA2A\t34\tBO\nFFAB162E-4712-E411-976E-7427EA38CA2A\t35\tBD\n00AC162E-4712-E411-976E-7427EA38CA2A\t840\tDLCK4MB\n01AC162E-4712-E411-976E-7427EA38CA2A\t690\tBACMB\n02AC162E-4712-E411-976E-7427EA38CA2A\t700\tBACVMB\n03AC162E-4712-E411-976E-7427EA38CA2A\t701\tGW-BI\n04AC162E-4712-E411-976E-7427EA38CA2A\t702\tGW-BO\n05AC162E-4712-E411-976E-7427EA38CA2A\t703\tGW-BV\n06AC162E-4712-E411-976E-7427EA38CA2A\t704\tGW-AI\n07AC162E-4712-E411-976E-7427EA38CA2A\t705\tGW-AO\n08AC162E-4712-E411-976E-7427EA38CA2A\t706\tGW-AV\n09AC162E-4712-E411-976E-7427EA38CA2A\t707\tGW-MI\n0AAC162E-4712-E411-976E-7427EA38CA2A\t708\tGW-MO\n0BAC162E-4712-E411-976E-7427EA38CA2A\t709\tGW-MV\n0CAC162E-4712-E411-976E-7427EA38CA2A\t4000\tMODMBTCP\n0DAC162E-4712-E411-976E-7427EA38CA2A\t4001\tMODMB485\n0EAC162E-4712-E411-976E-7427EA38CA2A\t4002\tMODNODE\n0FAC162E-4712-E411-976E-7427EA38CA2A\t5000\tVIDMB\n10AC162E-4712-E411-976E-7427EA38CA2A\t5001\tCAMR\n11AC162E-4712-E411-976E-7427EA38CA2A\t990\tTDLCK32MB\n12AC162E-4712-E411-976E-7427EA38CA2A\t1070\tTDLCK4MB\n13AC162E-4712-E411-976E-7427EA38CA2A\t900\tTDLCK6MB\n14AC162E-4712-E411-976E-7427EA38CA2A\t2540\tMSENSORMB\n15AC162E-4712-E411-976E-7427EA38CA2A\t1290\tKEYPADMB\n16AC162E-4712-E411-976E-7427EA38CA2A\t490\tS6000-INCMB\n88077AA7-1A72-E511-8CB1-80C16EE6C8EE\t5002\tDHCAMR\n89077AA7-1A72-E511-8CB1-80C16EE6C8EE\t5003\tHIKCAMR\n23746F60-D21F-E511-9409-80C16EE6C8EE\t920\t6T1S-MB\nA9FA4786-70CC-E411-8690-80C16EE6C92E\t1340\tTDLBLMB\n1522F9D4-70CC-E411-8690-80C16EE6C92E\t760\tACS3000-RD4MB\n25927607-71CC-E411-8690-80C16EE6C92E\t10000\t4000_MB\n26927607-71CC-E411-8690-80C16EE6C92E\t10001\t4000_DI\n27927607-71CC-E411-8690-80C16EE6C92E\t10002\t4000_DO\n28927607-71CC-E411-8690-80C16EE6C92E\t10003\t4000_AI\n29927607-71CC-E411-8690-80C16EE6C92E\t10004\t4000_AO\n2A927607-71CC-E411-8690-80C16EE6C92E\t10005\t4000_DI/R\n2B927607-71CC-E411-8690-80C16EE6C92E\t10006\t4000_AL\n2C927607-71CC-E411-8690-80C16EE6C92E\t10007\t4000_AL/R\n2D927607-71CC-E411-8690-80C16EE6C92E\t10008\t4000_BT\n2E927607-71CC-E411-8690-80C16EE6C92E\t10009\t4000_CT\n2F927607-71CC-E411-8690-80C16EE6C92E\t10010\t4000_DR\n30927607-71CC-E411-8690-80C16EE6C92E\t10011\t4000_RD\n31927607-71CC-E411-8690-80C16EE6C92E\t10012\t4000_DL\n32927607-71CC-E411-8690-80C16EE6C92E\t10013\t4000_DL/R\n33927607-71CC-E411-8690-80C16EE6C92E\t10014\t4000_BT/R\n34927607-71CC-E411-8690-80C16EE6C92E\t10015\t4000_LOCK\nE476F80A-72CC-E411-8690-80C16EE6C92E\t78\tS6000-SC4RMB\n1177F80A-72CC-E411-8690-80C16EE6C92E\t114\tS6000-SC1DMB\n6CC4714D-72CC-E411-8690-80C16EE6C92E\t36\tFDR\n6DC4714D-72CC-E411-8690-80C16EE6C92E\t37\tFRD\nCAC09C82-72CC-E411-8690-80C16EE6C92E\t51\tTK-MB\nCBC09C82-72CC-E411-8690-80C16EE6C92E\t52\tTK-DR\n"
+      },
+      "dateCreated": "Oct 26, 2016 3:44:46 AM",
+      "dateStarted": "Nov 4, 2016 2:14:11 AM",
+      "dateFinished": "Nov 4, 2016 2:14:11 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select * from machinetype limit 10",
+      "dateUpdated": "Nov 4, 2016 1:29:40 AM",
+      "config": {
+        "colWidth": 3.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1477467888486_1270879451",
+      "id": "20161026-154448_1113888585",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "id\tname\tdesc\n852EF656-EBEA-E311-9407-3C970E3F32A1\tACS4000-RD4/E\t门禁控制器\n862EF656-EBEA-E311-9407-3C970E3F32A1\tACS4000-8I8O\tIO控制器\n872EF656-EBEA-E311-9407-3C970E3F32A1\tS6000-LC8R\t灯光控制器\n882EF656-EBEA-E311-9407-3C970E3F32A1\tS6000-RC8\t酒店控制器\n892EF656-EBEA-E311-9407-3C970E3F32A1\tS6000-LIFT\t电梯控制器\n8A2EF656-EBEA-E311-9407-3C970E3F32A1\tACS4000-8AL4O/E\t报警控制器\n8B2EF656-EBEA-E311-9407-3C970E3F32A1\tS6000-GAT20\t网关控制器\n8C2EF656-EBEA-E311-9407-3C970E3F32A1\tS6000-HCS\t温控器\n8D2EF656-EBEA-E311-9407-3C970E3F32A1\tDLCK6\t六按键面板\n8E2EF656-EBEA-E311-9407-3C970E3F32A1\tDLBL5\t多功能五合一面板\n"
+      },
+      "dateCreated": "Oct 26, 2016 3:44:48 AM",
+      "dateStarted": "Oct 26, 2016 3:47:23 AM",
+      "dateFinished": "Oct 26, 2016 3:47:23 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql select * from machine limit 10",
+      "dateUpdated": "Nov 4, 2016 1:29:44 AM",
+      "config": {
+        "colWidth": 3.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1477467887125_32372742",
+      "id": "20161026-154447_840268743",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "id\tmachinetypeid\taddress\tpid\tname\n36BB1F90-F9EA-E311-9407-3C970E3F32A1\t962EF656-EBEA-E311-9407-3C970E3F32A1\t800-1#1\t(null)\t视频控制器\nA1966037-96EB-E311-9407-3C970E3F32A1\t952EF656-EBEA-E311-9407-3C970E3F32A1\t105-2#66\t(null)\tModbus模拟设备\n7DABC4DC-9586-E511-A8AB-7427EA3663A0\t8C2EF656-EBEA-E311-9407-3C970E3F32A1\t105-7#78#162\t9E08FC99-2085-E511-AACF-7427EA3663A0\t\nE9E020F6-AE86-E511-A8AB-7427EA3663A0\tA12EF656-EBEA-E311-9407-3C970E3F32A1\t105-7#30#2\t9707FC99-2085-E511-AACF-7427EA3663A0\t\n03E120F6-AE86-E511-A8AB-7427EA3663A0\t9F2EF656-EBEA-E311-9407-3C970E3F32A1\t105-7#30#29\t9707FC99-2085-E511-AACF-7427EA3663A0\t\n06E120F6-AE86-E511-A8AB-7427EA3663A0\t9F2EF656-EBEA-E311-9407-3C970E3F32A1\t105-7#30#40\t9707FC99-2085-E511-AACF-7427EA3663A0\t\n09E120F6-AE86-E511-A8AB-7427EA3663A0\t9F2EF656-EBEA-E311-9407-3C970E3F32A1\t105-7#30#39\t9707FC99-2085-E511-AACF-7427EA3663A0\t\n0CE120F6-AE86-E511-A8AB-7427EA3663A0\t9F2EF656-EBEA-E311-9407-3C970E3F32A1\t105-7#30#38\t9707FC99-2085-E511-AACF-7427EA3663A0\t\n0FE120F6-AE86-E511-A8AB-7427EA3663A0\t9F2EF656-EBEA-E311-9407-3C970E3F32A1\t105-7#30#36\t9707FC99-2085-E511-AACF-7427EA3663A0\t\n12E120F6-AE86-E511-A8AB-7427EA3663A0\t9F2EF656-EBEA-E311-9407-3C970E3F32A1\t105-7#30#64\t9707FC99-2085-E511-AACF-7427EA3663A0\t\n"
+      },
+      "dateCreated": "Oct 26, 2016 3:44:47 AM",
+      "dateStarted": "Oct 26, 2016 3:53:00 AM",
+      "dateFinished": "Oct 26, 2016 3:53:00 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "",
+      "dateUpdated": "Nov 21, 2016 4:41:44 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1477036632812_629522637",
+      "id": "20161021-155712_999399207",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\nimport scala.math\n"
+      },
+      "dateCreated": "Oct 21, 2016 3:57:12 AM",
+      "dateStarted": "Nov 21, 2016 4:41:12 AM",
+      "dateFinished": "Nov 21, 2016 4:41:27 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "",
+      "dateUpdated": "Nov 21, 2016 4:41:20 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1479717662848_-1209705708",
+      "id": "20161121-164102_577172953",
+      "dateCreated": "Nov 21, 2016 4:41:02 AM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "ascon_ioeventlog",
+  "id": "2BZZAJAZC",
+  "angularObjects": {
+    "2BY98S9W2:shared_process": [],
+    "2BZN39DZF:shared_process": [],
+    "2BY515SJU:shared_process": [],
+    "2BY63HPYF:shared_process": [],
+    "2BXGT6S2K:shared_process": [],
+    "2BZ613KSU:shared_process": [],
+    "2BZ8A7E2E:shared_process": [],
+    "2BZSKZKCV:shared_process": [],
+    "2BXPP47F9:shared_process": [],
+    "2BXU3K7UZ:shared_process": [],
+    "2BYUGR38A:shared_process": [],
+    "2BYBYAWVT:shared_process": [],
+    "2C1KUKSFC:shared_process": [],
+    "2BXESRBUA:shared_process": [],
+    "2BYNRTR44:shared_process": [],
+    "2BY67DHM2:shared_process": [],
+    "2BXUY475Z:shared_process": [],
+    "2BZPA2E8W:shared_process": []
+  },
+  "config": {
+    "looknfeel": "default"
+  },
+  "info": {}
+}

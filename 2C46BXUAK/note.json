@@ -1,0 +1,357 @@
+{
+  "paragraphs": [
+    {
+      "text": "/*read data file*/\nval path \u003d \"/Users/lynnjiang/Desktop/intern/\"\nval rawData \u003d sc.textFile(path + \"kddcup.data.corrected\")",
+      "dateUpdated": "Dec 6, 2016 1:37:59 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1480925485560_1206662579",
+      "id": "20161205-161125_1361442261",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\npath: String \u003d /Users/lynnjiang/Desktop/intern/\n\nrawData: org.apache.spark.rdd.RDD[String] \u003d /Users/lynnjiang/Desktop/intern/kddcup.data.corrected MapPartitionsRDD[9] at textFile at \u003cconsole\u003e:32\n"
+      },
+      "dateCreated": "Dec 5, 2016 4:11:25 AM",
+      "dateStarted": "Dec 6, 2016 1:37:59 PM",
+      "dateFinished": "Dec 6, 2016 1:38:00 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "/*print out data group by labels*/\nrawData.map(_.split(\u0027,\u0027).last).countByValue().toSeq.sortBy(_._2).reverse.foreach(println)\n//rawData.sortBy(_.split(\u0027,\u0027)(4).toInt).toDF.show",
+      "dateUpdated": "Dec 6, 2016 1:37:59 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1480925536647_1472432124",
+      "id": "20161205-161216_1276232998",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "(smurf.,2807886)\n(neptune.,1072017)\n(normal.,972781)\n(satan.,15892)\n(ipsweep.,12481)\n(portsweep.,10413)\n(nmap.,2316)\n(back.,2203)\n(warezclient.,1020)\n(teardrop.,979)\n(pod.,264)\n(guess_passwd.,53)\n(buffer_overflow.,30)\n(land.,21)\n(warezmaster.,20)\n(imap.,12)\n(rootkit.,10)\n(loadmodule.,9)\n(ftp_write.,8)\n(multihop.,7)\n(phf.,4)\n(perl.,3)\n(spy.,2)\n"
+      },
+      "dateCreated": "Dec 5, 2016 4:12:16 AM",
+      "dateStarted": "Dec 6, 2016 1:37:59 PM",
+      "dateFinished": "Dec 6, 2016 1:38:08 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "import org.apache.spark.mllib.linalg._\n/*get rid of the values that are not number*/\nval labelsAndData \u003d rawData.map{line \u003d\u003e\n    val buffer \u003dline.split(\u0027,\u0027).toBuffer\n    buffer.remove(1,3)\n    val label \u003d buffer.remove(buffer.length-1)\n    val vector \u003d Vectors.dense(buffer.map(_.toDouble).toArray)\n    (label,vector)\n}\n/*pick out values instead of labels*/\nval data \u003dlabelsAndData.values.cache()",
+      "dateUpdated": "Dec 6, 2016 1:37:59 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1480925768547_735743605",
+      "id": "20161205-161608_542243645",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\n\nimport org.apache.spark.mllib.linalg._\nlabelsAndData: org.apache.spark.rdd.RDD[(String, org.apache.spark.mllib.linalg.Vector)] \u003d MapPartitionsRDD[14] at map at \u003cconsole\u003e:36\n\ndata: org.apache.spark.rdd.RDD[org.apache.spark.mllib.linalg.Vector] \u003d MapPartitionsRDD[15] at values at \u003cconsole\u003e:39\n"
+      },
+      "dateCreated": "Dec 5, 2016 4:16:08 AM",
+      "dateStarted": "Dec 6, 2016 1:38:00 PM",
+      "dateFinished": "Dec 6, 2016 1:38:09 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "import org.apache.spark.mllib.clustering._\n/*run KMeans*/\n//val kmeans \u003dnew KMeans()\n//data Vector(Array)\n//val model \u003d kmeans.run(data)\n\n//model.clusterCenters.foreach(println)\n",
+      "dateUpdated": "Dec 6, 2016 1:37:59 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1480927282286_668957639",
+      "id": "20161205-164122_1190926805",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\nimport org.apache.spark.mllib.clustering._\n"
+      },
+      "dateCreated": "Dec 5, 2016 4:41:22 AM",
+      "dateStarted": "Dec 6, 2016 1:38:08 PM",
+      "dateFinished": "Dec 6, 2016 1:38:09 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "//Union clustering numbers and labels group by number and label\nval clusterLabelCount \u003d labelsAndData.map{case (label, data) \u003d\u003e\n    val cluster \u003d model.predict(data)\n    (cluster, label)\n}.countByValue\n\n/** print cluster numbers and labels **/\nclusterLabelCount.toSeq.sorted.foreach {\n    case((cluster, label),count) \u003d\u003e\n        println(f\"$cluster%1s$label%18s$count%8s\")\n}\n   ",
+      "dateUpdated": "Dec 6, 2016 1:37:59 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1480927814670_1993229416",
+      "id": "20161205-165014_41417627",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "\n\n\n\u003cconsole\u003e:46: error: not found: value model\n           val cluster \u003d model.predict(data)\n                         ^\n\n\n\n\n\u003cconsole\u003e:51: error: diverging implicit expansion for type scala.math.Ordering[T1]\nstarting with method Tuple9 in object Ordering\n       clusterLabelCount.toSeq.sorted.foreach {\n                               ^\n"
+      },
+      "dateCreated": "Dec 5, 2016 4:50:14 AM",
+      "dateStarted": "Dec 6, 2016 1:38:09 PM",
+      "dateFinished": "Dec 6, 2016 1:38:09 PM",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "/*caculate distance of two points*/\ndef distance(a:Vector, b:Vector) \u003d math.sqrt(a.toArray.zip(b.toArray).map(p \u003d\u003e p._1 - p._2).map(d \u003d\u003e d*d).sum)\n\n/*every node\u0027s distance to centroid*/\ndef disToCentroid(datum : Vector, model: KMeansModel) \u003d {\n    val cluster \u003d model.predict(datum)\n    val centroid \u003d model.clusterCenters(cluster)\n    distance(datum, centroid)\n}\n\n\nimport org.apache.spark.rdd._\n/*average distance to centroids of the whole data*/\ndef clusteringScore(data: RDD[Vector], k: Int, n : Int) \u003d{\n    val kmeans \u003d new KMeans()\n    kmeans.setRuns(n)\n    kmeans.setK(k)\n    val model \u003d kmeans.run(data)\n    data.map(data \u003d\u003e disToCentroid(data, model)).mean()\n}\n    \n\n    ",
+      "dateUpdated": "Dec 6, 2016 1:37:59 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1479374741203_1754108599",
+      "id": "20161117-172541_817465370",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\n\n\ndistance: (a: org.apache.spark.mllib.linalg.Vector, b: org.apache.spark.mllib.linalg.Vector)Double\ndisToCentroid: (datum: org.apache.spark.mllib.linalg.Vector, model: org.apache.spark.mllib.clustering.KMeansModel)Double\nimport org.apache.spark.rdd._\n\nclusteringScore: (data: org.apache.spark.rdd.RDD[org.apache.spark.mllib.linalg.Vector], k: Int, n: Int)Double\n"
+      },
+      "dateCreated": "Nov 17, 2016 5:25:41 AM",
+      "dateStarted": "Dec 6, 2016 1:38:09 PM",
+      "dateFinished": "Dec 6, 2016 1:38:11 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "//(5 to 40 by 5).map(k \u003d\u003e (k, clusteringScore(data,k,10))).foreach(println)",
+      "dateUpdated": "Dec 6, 2016 1:37:59 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1480929557331_-56244252",
+      "id": "20161205-171917_408808292",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": ""
+      },
+      "dateCreated": "Dec 5, 2016 5:19:17 AM",
+      "dateStarted": "Dec 6, 2016 1:38:10 PM",
+      "dateFinished": "Dec 6, 2016 1:38:11 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "/*normalized Data*/\nval dataAsArray \u003d data.map(_.toArray)\nval numCols \u003d dataAsArray.first().length//column number\nval n \u003d dataAsArray.count()//row number\nval sums \u003d dataAsArray.reduce((a,b)\u003d\u003e a.zip(b).map(t\u003d\u003e t._1 +t._2))\nval sumSquares \u003d dataAsArray.fold(new Array[Double](numCols))((a,b) \u003d\u003e a.zip(b).map(t \u003d\u003e t._1+t._2*t._2))\n    \nval stdevs \u003d sumSquares.zip(sums).map {\n    case(sumSq,sum) \u003d\u003e math.sqrt(n*sumSq - sum*sum)/n\n}\nval means \u003d sums.map(_ / n)\n    \ndef normalize(datum: Vector) \u003d {\n    val normalizedArray \u003d (datum.toArray, means, stdevs).zipped.map(\n        (value, mean, stdev) \u003d\u003e\n            if(stdev \u003c\u003d 0)(value - mean) else (value - mean) / stdev\n    )\n    Vectors.dense(normalizedArray)\n}",
+      "dateUpdated": "Dec 6, 2016 1:37:59 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1480930086190_-539907557",
+      "id": "20161205-172806_313587978",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\ndataAsArray: org.apache.spark.rdd.RDD[Array[Double]] \u003d MapPartitionsRDD[16] at map at \u003cconsole\u003e:48\n\nnumCols: Int \u003d 38\n\nn: Long \u003d 4898431\n\nsums: Array[Double] \u003d Array(2.3680206E8, 8.986765238E9, 5.357035893E9, 28.0, 3178.0, 39.0, 60925.0, 157.0, 703067.0, 39620.0, 334.0, 180.0, 63361.0, 5823.0, 364.0, 5002.0, 0.0, 2.0, 4091.0, 1.640844284E9, 1.446345448E9, 871775.1399999994, 872101.7299999987, 282468.46999999916, 282786.9200000001, 3869193.129999836, 103746.83999992965, 138433.6000000087, 1.141241758E9, 9.26852923E8, 3692012.280000057, 150436.22999995697, 2963805.5299999374, 31663.98000001707, 872367.2000000095, 871361.6200000172, 283755.3499999958, 282440.6599999857)\n\nsumSquares: Array[Double] \u003d Array(1.8251053254220877E24, 1.5028691047454617E37, 4.1479260583421715E36, 312.0, 1.9033906E7, 39947.0, 2.05624051113E11, 16281.0, 8.9950127857E10, 3.762433849743412E15, 21030.0, 14032.0, 3.826441296269735E15, 8.30640425E8, 22302.0, 5498526.0, 0.0, 2.0, 2468835.0, 3.650905996542833E22, 3.510314625423693E22, 1.276927939442977E11, 1.2775150678269179E11, 2.4208194171856552E10, 2.4239238758105E10, 7.40848981383063E11, 1.998153632374866E8, 1.3129891425574625E9, 3.8078328154178553E21, 2.8230495278996967E21, 6.878037383317927E11, 6.948391005957295E8, 5.4033005706056195E11, 1.4359189363777582E7, 1.2779669123687401E11, 1.2773926062373058E11, 2.4017136249699917E10, 2.383114745028901E10)\n\nstdevs: Array[Double] \u003d Array(6.104013264599402E8, 1.7515884823912992E15, 9.202101209275972E14, 0.007980841543918522, 1.9712215535247153, 0.0903053719320444, 204.88419481923705, 0.0576516808237867, 135.51025154219585, 27714.42924229041, 0.06552256702321844, 0.053521858831015345, 27949.177385007828, 13.022010234822616, 0.06747503910589286, 1.0594840971176382, 0.0, 6.3897874456691E-4, 0.7099327887848896, 8.633200515545668E7, 8.4653423119692E7, 161.45609095074775, 161.49320521699835, 70.29955137246021, 70.34461297681736, 388.8977681732042, 6.38680347702198, 16.37198819915362, 2.7881134318366885E7, 2.400660525282181E7, 374.7165630424448, 11.910011571767498, 332.12406537854747, 1.7121167208594668, 161.52176194800634, 161.48546488277606, 70.02158946287807, 69.74993882610023)\nmeans: Array[Double] \u003d Array(48.34243046395876, 1834.6211752293746, 1093.6228137132073, 5.716116037972159E-6, 6.487791703098401E-4, 7.961733052889793E-6, 0.012437656057623349, 3.205107921291532E-5, 0.14352901980246327, 0.008088304193730605, 6.81850984529536E-5, 3.674646024410674E-5, 0.012934958152926926, 0.0011887479888968528, 7.430950849363806E-5, 0.001021143300783455, 0.0, 4.082940027122971E-7, 8.351653825480036E-4, 334.97344027097654, 295.26708613431526, 0.17797028068783646, 0.1780369530570092, 0.05766509112815903, 0.057730101740741085, 0.789884175157277, 0.021179606286161765, 0.0282608043269383, 232.98108271811932, 189.21424492863122, 0.7537132359320887, 0.030711105249815088, 0.6050520115522577, 0.006464106568004544, 0.17809114796146144, 0.17788586181983929, 0.05792780382126354, 0.0...\nnormalize: (datum: org.apache.spark.mllib.linalg.Vector)org.apache.spark.mllib.linalg.Vector\n"
+      },
+      "dateCreated": "Dec 5, 2016 5:28:06 AM",
+      "dateStarted": "Dec 6, 2016 1:38:11 PM",
+      "dateFinished": "Dec 6, 2016 1:38:58 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val normalizedData \u003d data.map(normalize).cache()\n(60 to 120 by 10).par.map(k\u003d\u003e(k,clusteringScore(normalizedData,k,10))).toList.foreach(println)",
+      "dateUpdated": "Dec 6, 2016 1:37:59 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1480995354253_1217391678",
+      "id": "20161206-113554_881108720",
+      "dateCreated": "Dec 6, 2016 11:35:54 AM",
+      "dateStarted": "Dec 6, 2016 1:38:12 PM",
+      "status": "PENDING",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "",
+      "dateUpdated": "Dec 6, 2016 1:38:00 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1479716905013_-1599946717",
+      "id": "20161121-162825_1440967330",
+      "dateCreated": "Nov 21, 2016 4:28:25 AM",
+      "status": "PENDING",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "/Learning/K-means \u0026 TDigest",
+  "id": "2C46BXUAK",
+  "angularObjects": {
+    "2BY98S9W2:shared_process": [],
+    "2BZN39DZF:shared_process": [],
+    "2BY515SJU:shared_process": [],
+    "2BY63HPYF:shared_process": [],
+    "2BXGT6S2K:shared_process": [],
+    "2BZ613KSU:shared_process": [],
+    "2BZ8A7E2E:shared_process": [],
+    "2BZSKZKCV:shared_process": [],
+    "2BXPP47F9:shared_process": [],
+    "2BXU3K7UZ:shared_process": [],
+    "2BYUGR38A:shared_process": [],
+    "2BYBYAWVT:shared_process": [],
+    "2C1KUKSFC:shared_process": [],
+    "2BXESRBUA:shared_process": [],
+    "2BYNRTR44:shared_process": [],
+    "2BY67DHM2:shared_process": [],
+    "2BXUY475Z:shared_process": [],
+    "2BZPA2E8W:shared_process": []
+  },
+  "config": {
+    "looknfeel": "default"
+  },
+  "info": {}
+}
